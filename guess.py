@@ -10,7 +10,7 @@ class Guess:
         np.set_printoptions(suppress=True)
 
         # Load the model
-        self.model = tensorflow.keras.models.load_model('keras_model.h5')
+        self.model = tensorflow.keras.models.load_model('C:/Users/82108/Downloads/학년별 수업/코봇관련/openCV/opencv_/CONVER~1/keras_model.h5')
 
         # Create the array of the right shape to feed into the keras model
         # The 'length' or number of images you can put into the array is
@@ -26,7 +26,7 @@ class Guess:
 
 
         # Replace this with the path to your image
-        path = 'C:/Users/82108/Downloads/openCV/opencv_/exercise'
+        path = 'C:/Users/82108/Downloads/학년별 수업/코봇관련/openCV/opencv_/trackFood/exercise'
         images = os.listdir(path)
         print(images)
 
@@ -48,14 +48,14 @@ class Guess:
 
             # run the inference
             prediction = self.model.predict(self.data)
-            print(prediction)
+            # print(prediction)  # 세부 예측빈도
             max_pct = np.max(prediction[0]) # max_percentage
             max_pct_idx = np.argmax(prediction[0]) # max_percentage's index
             if max_pct < 0.5:
-                print('모르겠어요')
-                self.result.append('모르겠어요')
+                print(img + '▶  Not Correct!')
+                self.result.append(img + '▶  Not Correct!')
             else:
-                print(label[max_pct_idx])
+                print(img + "▶ " + label[max_pct_idx])
                 self.result.append(label[max_pct_idx])
 
 
@@ -67,11 +67,11 @@ class Guess:
 
         for i in range(len(w_lst)):
             if w_lst[i][0] < x < w_lst[i][1] and h_lst[i][0] < y < h_lst[i][1]:  # 어떤 한 박스의 영역에만 들어와도
-                answer += (self.result[i]+'입니다')  # 이부분이 케라스의 result와 연동되어야할 부분
+                answer = (self.result[i]+'입니다')  # 이부분이 케라스의 result와 연동되어야할 부분
                 break
             else:  # 파란 포인터는 있는데 반찬있는 곳에 있지 않을경우
-                answer += '더 이동해주세요'
-
+                answer = '더 이동해주세요'
+        print(answer)
         return answer
 
 if __name__ == '__main__':

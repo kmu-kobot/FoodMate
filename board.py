@@ -1,15 +1,13 @@
+# coding=utf-8
 import cv2
-
-
-
 
 class Board:
 
     def __init__(self, image=None):
 
         # 이미지 읽기 및 전처리
-       # self.img = image.copy()
-        self.img = cv2.imread('./eating/eating17.jpg') # 데모용
+        # self.img = image.copy()
+        self.img = cv2.imread('./eating/unnamed.jpg')  # 데모용 이미지 업로드
         # self.img = cv2.resize(self.img, (width, height))  # 사진 사이즈 고정 - 사이즈도 등고선에 영향
 
         # 조각의 위치를 기록, 반찬의 가지수
@@ -91,7 +89,7 @@ class Board:
                 self.box_x.append([x, x + w])  # 조각의 위치를 기록
                 self.box_y.append([y, h + y])
 
-                cv2.imshow('test' + str(self.count), each_menu[y:h + y, x:x + w])  # 검토하기
+                # cv2.imshow('test' + str(self.count), each_menu[y:h + y, x:x + w])  # 검토하기
 
             ################데모용 전체 등고선 ##############################
             # cv2.rectangle(all_menu, (x, y), (x + w, h + y), (0, i, 9 * i), 2)
@@ -110,7 +108,14 @@ class Board:
             cv2.imshow('original', cut_img)
             cv2.imshow('all_menu', all_menu)
 
+            # ESC 키누르면 종료
+            if cv2.waitKey(1) & 0xFF == 27:
+                break
+
+
+
         cv2.waitKey(0)
+
 
 
 if __name__ == '__main__':

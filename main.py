@@ -1,3 +1,4 @@
+# coding=utf-8
 import cv2
 import numpy as np
 import time
@@ -21,20 +22,18 @@ class MainDish:
 
         # 모든 클래스의 객체생성
         # 1. 급식판 좌표
-        board = Board(self.img)
-        self.x_strt, self.x_end, self.y_strt, self.y_end = board.edgeOfBoard()
-        board.frgm_board(board.edgeOfBoard)  # 급식판 메뉴따기 함수 callback
-
+        self.board = Board(self.img)
+        self.x_strt, self.x_end, self.y_strt, self.y_end = self.board.edgeOfBoard()
+        self.board.frgm_board(self.board.edgeOfBoard)  # 급식판 메뉴따기 함수 callback
         # 2. 추적할 파란색 범위
         trackBlue = Track_blue(self.img)
         self.hsv, self.lower_blue1, self.upper_blue1, self.lower_blue2, self.upper_blue2,\
                             self.lower_blue3, self.upper_blue3 = trackBlue.find_target()
 
-        # 3. keras로 음식 맞추기 self로 객체선언 자주 'maindish' 클래스에 의해 호출되어야돼
+        # 3. keras로 음식 맞추기 self로 객체선언 자주 'maindish' 클래스에 의해 호출되어야해
         self.guess = Guess()
         self.guess.realGuess()  # 일단 급식판에 무슨 음식이 있는지 학습
-        self.answer = self.guess.matchFood(self.Cx, self.Cy, board.box_x, board.box_y)
-
+        self.answer = self.guess.matchFood(self.Cx, self.Cy, self.board.box_x, self.board.box_y)
 
 
 
@@ -83,6 +82,13 @@ class MainDish:
                 self.Cx = x + w // 2
                 self.Cy = y + h // 2
                 cv2.line(img_color, (self.Cx, self.Cy), (self.Cx, self.Cy), (0, 0, 255), 10)
+                print("{}, {}".format(str(self.Cx), str(self.Cy)))  # 젓가락의 포인터 위치 출력하기
+
+                # 젓가락의 위치랑 이미지의 픽셀값안에 있나 확인해서 음식명 출력
+                self.answer = self.guess.matchFood(self.Cx, self.Cy, self.board.box_x, self.board.box_y)
+            ##############################  Track Blue 끝!##############################################
+
+
             # 급식판 테두리 그리기
             cv2.rectangle(img_color, (self.x_strt, self.y_strt), (self.x_end, self.y_end), (0, 0, 0), 2)
 
@@ -103,6 +109,7 @@ class MainDish:
 
 
 if __name__ == '__main__':
-    fname = 'C:/Users/82108/Downloads/openCV/opencv_/capstick.mp4'
+    fname = './capstick.mp4'
     maindish = MainDish(fname)
+
     maindish.goingOn()
