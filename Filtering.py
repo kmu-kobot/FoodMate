@@ -4,8 +4,7 @@ class Filter:
     def __init__(self):
         # 스캔한 이미지 읽기
         self.img = cv2.imread('../data/img/Scanned_image.jpg')
-
-    def check_right(self, img):
+    def check_right(self):
         count = 0  # 등고선 처리 진행 정도 확인용 변수
 
         # 이진화된 이미지 얻어서 등고선 처리
@@ -17,6 +16,13 @@ class Filter:
 
         for cnt in contours:
             area = cv2.contourArea(cnt)
-            if area > 3000:
+            if area > 500:
+                x, y, w, h = cv2.boundingRect(cnt)
+                cv2.rectangle(self.img, (x, y), (x + w, h + y), (0, 9, 225), 2)
                 count += 1
+
         return True if count > 5 else False
+
+if __name__ == '__main__':
+    maindish = Filter()
+    maindish.check_right()
