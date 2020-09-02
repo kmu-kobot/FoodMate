@@ -7,7 +7,7 @@ from board import Board
 from track_blue import Track_blue
 from guess import Guess
 from playsound import playsound
-
+from Filtering import Filter
 
 
 class MainDish:
@@ -22,8 +22,18 @@ class MainDish:
         self.cap = cv2.VideoCapture(-1) 
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-        ret, self.img = self.cap.read()
-        cv2.imwrite('../data/img/Scanned_image.jpg',self.img, params=[cv2.IMWRITE_JPEG_QUALITY,70])
+
+        # 적절한 사진 filtering 기능
+        self.filter = Filter()
+        while True:
+            ret, self.img = self.cap.read()
+            cv2.imwrite('../data/img/Scanned_image.jpg', self.img, params=[cv2.IMWRITE_JPEG_QUALITY, 70])
+            check_right_img = self.filter.check_right()
+
+            if check_right_img:
+                playsound('../data/sound/음식이+보입니다.mp3')
+                break
+
 
         # 젓가락의 위치
         self.Cx, self.Cy = 0, 0
