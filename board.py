@@ -1,17 +1,15 @@
+# coding=utf-8
 import cv2
-
-
-
+from playsound import playsound
+import os
 
 class Board:
 
     def __init__(self, image=None):
 
-        # 이미지 읽기 및 전처리
-       # self.img = image.copy()
-        self.img = cv2.imread('./eating/eating17.jpg') # 데모용
-        # self.img = cv2.resize(self.img, (width, height))  # 사진 사이즈 고정 - 사이즈도 등고선에 영향
-
+        # 스캔한 이미지 읽기 
+        self.img = cv2.imread('../data/img/Scanned_image.jpg')  
+    
         # 조각의 위치를 기록, 반찬의 가지수
         self.box_x = []
         self.box_y = []
@@ -45,18 +43,12 @@ class Board:
             if y_strt != 0 and y_end != 0:
                 break
 
-
-        #급식판 자르기 검토
-        # cv2.rectangle(self.img, (x_strt, y_strt), (x_end, y_end), (255, 0, 0), 4)  # 파란색
-        # cv2.imshow('result', self.img)
-        # cv2.waitKey(0)
-        # cv2.destrtoyAllWindows()
         return x_strt, x_end, y_strt, y_end
 
 
     # 급식판의 메뉴를 조각 이미지로 저장, 반찬의 가지수 구함
     def frgm_board(self, callback):
-
+        count = 0    # 등고선 처리 진행 정도 확인용 변수
         x_strt, x_end, y_strt, y_end = callback()
         cut_img = self.img[y_strt: y_end, x_strt: x_end]
         cut_img = self.img.copy()
@@ -76,8 +68,9 @@ class Board:
                                                cv2.CHAIN_APPROX_SIMPLE)
 
         # 등고선 전처리 ('contours'는 리스트로써 각각의 등고선들(등고선도 리스트로 각각의 점을 담음)을 담고있다)
+        print(len(contours))
         for i in range(len(contours)):
-
+            
             # 각 등고선마다의 사각형 포인트를 구해, 일정 크기 이상의 사각형만을 반찬으로써 도출
             cnt = contours[i]
             x, y, w, h = cv2.boundingRect(cnt)
@@ -86,31 +79,20 @@ class Board:
                 # 이미지 저장
                 each_menu = cut_img.copy()  # 새로운 그림에 찍어야 선그은게 안보임
                 self.count += 1  # 자른 조각 카운트
-                path = './exercise'  # 자른 이미지들 저장 경로 및 저장
-                cv2.imwrite(path + '/test' + str(self.count) + '.jpg', each_menu[y:h + y, x:x + w])  # 자른 급식판 저장
+                path = '../data/img'  # 자른 이미지들 저장 경로 및 저장
+                cv2.imwrite(path +'/'+ str(self.count) + '.jpg', each_menu[y:h + y, x:x + w])  # 자른 급식판 저장
                 self.box_x.append([x, x + w])  # 조각의 위치를 기록
                 self.box_y.append([y, h + y])
 
-                cv2.imshow('test' + str(self.count), each_menu[y:h + y, x:x + w])  # 검토하기
-
-            ################데모용 전체 등고선 ##############################
-            # cv2.rectangle(all_menu, (x, y), (x + w, h + y), (0, i, 9 * i), 2)
-            # # 이미지 저장
-            # each_menu = cut_img.copy()  # 새로운 그림에 찍어야 선그은게 안보임
-            # self.count += 1  # 자른 조각 카운트
-            # path = './exercise'  # 자른 이미지들 저장 경로 및 저장
-            # cv2.imwrite(path + '/test' + str(self.count) + '.jpg', each_menu[y:h + y, x:x + w])  # 자른 급식판 저장
-            # self.box_x.append([x, x + w])  # 조각의 위치를 기록
-            # self.box_y.append([y, h + y])
-            #
-            # cv2.imshow('test' + str(self.count), each_menu[y:h + y, x:x + w])  # 검토하기
-            ###############################################데모끝########################
-
-
-            cv2.imshow('original', cut_img)
             cv2.imshow('all_menu', all_menu)
+            
+            # 스캔 시작과 끝에 음성 출력
+            if count == 0 or count == len(contours)-1:
+                playsound('../data/sound/스캔중.mp3')
+            count += 1
 
-        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
 
 
 if __name__ == '__main__':

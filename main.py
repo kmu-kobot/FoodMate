@@ -1,59 +1,57 @@
+# coding=utf-8
 import cv2
+import os
 import numpy as np
 import time
 from board import Board
 from track_blue import Track_blue
 from guess import Guess
+from playsound import playsound
+
 
 
 class MainDish:
 
-    def __init__(self, fname=None):  # 데모할때만 파일이름 넣어주고 실제는 캠으로
+    def __init__(self):
 
+        # img 폴더 안에 있던 이미지 모두 삭제
+        for file in os.scandir('../data/img'):
+            os.remove(file.path)
 
-        # self.img = cv2.imread(fname)  # 사진 사용
-        # self.cap = cv.VideoCapture(0) # 웹캠 사용
-        self.cap = cv2.VideoCapture(fname)  # 동영상 사용
+        # 웹캠 사용해서 식판 스캔
+        self.cap = cv2.VideoCapture(-1) 
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
         ret, self.img = self.cap.read()
+        cv2.imwrite('../data/img/Scanned_image.jpg',self.img, params=[cv2.IMWRITE_JPEG_QUALITY,70])
 
         # 젓가락의 위치
         self.Cx, self.Cy = 0, 0
 
+        # keras 미리 로딩
+        self.guess = Guess()
+
         # 모든 클래스의 객체생성
         # 1. 급식판 좌표
-        board = Board(self.img)
-        self.x_strt, self.x_end, self.y_strt, self.y_end = board.edgeOfBoard()
-        board.frgm_board(board.edgeOfBoard)  # 급식판 메뉴따기 함수 callback
-
+        self.board = Board(self.img)
+        self.x_strt, self.x_end, self.y_strt, self.y_end = self.board.edgeOfBoard()
+        self.board.frgm_board(self.board.edgeOfBoard)  # 급식판 메뉴따기 함수 callback
         # 2. 추적할 파란색 범위
         trackBlue = Track_blue(self.img)
         self.hsv, self.lower_blue1, self.upper_blue1, self.lower_blue2, self.upper_blue2,\
                             self.lower_blue3, self.upper_blue3 = trackBlue.find_target()
-
-        # 3. keras로 음식 맞추기 self로 객체선언 자주 'maindish' 클래스에 의해 호출되어야돼
-        self.guess = Guess()
+        # 3. keras로 음식 맞추기 
         self.guess.realGuess()  # 일단 급식판에 무슨 음식이 있는지 학습
-        self.answer = self.guess.matchFood(self.Cx, self.Cy, board.box_x, board.box_y)
+        self.answer = self.guess.matchFood(self.Cx, self.Cy, self.board.box_x, self.board.box_y)
 
-
-
-
-        # # img_result 이름의 윈도우창에 트랙바를 생성
-        # cv2.namedWindow('img_result')
-        # cv2.createTrackbar('threshold', 'img_result', 0, 255, self.nothing)
-        # cv2.setTrackbarPos('threshold', 'img_result', 30)
-
-    def nothing(self):  # 트랙바때매 생성
-        pass
 
     def goingOn(self):  # 여기 callback으로 matchfood 넣을지 고민
+
         while (True):
-            # img_color = self.img.copy()
-            time.sleep(0.2)
+            img_color = self.img.copy()
             ret, img_color = self.cap.read()
             height, width = img_color.shape[:2]
-            # img_color = cv.resize(img_color, (width, height), interpolation=cv.INTER_AREA)
-
+            img_color = cv2.resize(img_color, (width, height), interpolation=cv2.INTER_AREA)
             # 원본 영상을 HSV 영상으로 변환합니다.
             img_hsv = cv2.cvtColor(img_color, cv2.COLOR_BGR2HSV)
 
@@ -83,26 +81,30 @@ class MainDish:
                 self.Cx = x + w // 2
                 self.Cy = y + h // 2
                 cv2.line(img_color, (self.Cx, self.Cy), (self.Cx, self.Cy), (0, 0, 255), 10)
-            # 급식판 테두리 그리기
+
+                # 젓가락의 위치랑 이미지의 픽셀값안에 있나 확인해서 음식명 출력
+                self.answer = self.guess.matchFood(self.Cx, self.Cy, self.board.box_x, self.board.box_y)
+
+
+            # 파란색 부분 테두리 그리기
             cv2.rectangle(img_color, (self.x_strt, self.y_strt), (self.x_end, self.y_end), (0, 0, 0), 2)
 
             # 마스크 이미지로 원본 이미지에서 범위값에 해당되는 영상 부분을 획득합니다.
             img_result = cv2.bitwise_and(img_color, img_color, mask=img_mask)
             cv2.imshow('img_color', img_color)
-            cv2.imshow('img_result', img_result)  # 트랙바가 생성될 창
+            cv2.imshow('img_result', img_result)
 
             # ESC 키누르면 종료
             if cv2.waitKey(1) & 0xFF == 27:
                 break
+
 
         cv2.destroyAllWindows()
 
 
 
 
-
-
 if __name__ == '__main__':
-    fname = 'C:/Users/82108/Downloads/openCV/opencv_/capstick.mp4'
-    maindish = MainDish(fname)
+    maindish = MainDish() 
+    playsound('../data/sound/스캔완료.mp3')
     maindish.goingOn()
