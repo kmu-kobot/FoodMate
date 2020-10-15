@@ -8,6 +8,7 @@ def make_mask_image(img_bgr):
     # img_h,img_s,img_v = cv.split(img_hsv)
 
     low = (0, 30, 0)
+
     high = (15, 255, 255)
 
     img_mask = cv.inRange(img_hsv, low, high)
@@ -15,12 +16,13 @@ def make_mask_image(img_bgr):
     return img_mask
 """
 
+
 def detect_chopstic(img, thr, minLineLength, maxLineGap):
-    edges = cv.Canny(img, 50, 150, apertureSize = 3)
+    edges = cv.Canny(img, 50, 150, apertureSize=3)
     # lines = cv.HoughLines(edges, 1,np.pi/180,thr)
-    lines = cv.HoughLinesP(edges, 1,np.pi/180,thr, minLineLength=minLineLength,maxLineGap=maxLineGap)
+    lines = cv.HoughLinesP(edges, 1, np.pi / 180, thr, minLineLength=minLineLength, maxLineGap=maxLineGap)
     if lines is None:
-        return None,None,None,None
+        return None, None, None, None
     """
     for line in lines:
         r, theta = line[0]
@@ -34,9 +36,20 @@ def detect_chopstic(img, thr, minLineLength, maxLineGap):
         x2 = int(x0 - length*(-b))
         y2 = int(y0 - length*a)
     """
-    for line in lines:
-        x1, y1, x2, y2 = line[0]
-    return x1,y1,x2,y2
+
+    x1, y1, x2, y2 = lines[0][0]
+    return x1, y1, x2, y2
+
+
+def detect_spoon(img):
+    circles = cv.HoughCircles(img, cv.HOUGH_GRADIENT, 1, 10,
+                              param1=50, param2=12, minRadius=30, maxRadius=60)
+    if circles is None:
+        return None, None, None
+    x = np.uint16(np.around(circles))[0][0][0]
+    y = np.uint16(np.around(circles))[0][0][1]
+    r = np.uint16(np.around(circles))[0][0][2]
+    return x, y, r
 
 
 cap = cv.VideoCapture(0)
@@ -68,11 +81,16 @@ while (1):
     # cv.imshow('mask', mask_img)
     ###########################################
     # 젓가락 끝점 좌표
-    x1,y1,x2,y2 = detect_chopstic(fgmask, 90,20,100)
+    x1, y1, x2, y2 = detect_chopstic(fgmask, 90, 15, 100)
+    c_x, c_y, r = detect_spoon(fgmask)
     # 직선이 검출되면 선분과 끝점 그리기
     if x1 != None:
         cv.line(frame, (x1, y1), (x2, y2), (0, 255, 0), 5)
         cv.circle(frame, (x1, y1), 10, (255, 0, 0), -1)
+    # 원이 검출되면 원 그리기
+    if c_x != None:
+        cv.circle(frame, (c_x, c_y), r, (0, 255, 0), 5)
+        cv.circle(frame, (c_x, c_y), 10, (255, 0, 0), -1)
     # 원본 이미지
     cv.imshow('img', frame)
     # 차영상
