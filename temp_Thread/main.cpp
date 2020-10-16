@@ -9,20 +9,20 @@
 using namespace cv;
 using namespace std;
 
-// 0....À¥Ä· ¿­¾îÁÖ±â
+// 0....ì›¹ìº  ì—´ì–´ì£¼ê¸°
 VideoCapture vcap;
 Mat frame;
-// 1....Thread »ı¼º
+// 1....Thread ìƒì„±
 pthread_mutex_t frameLocker;
 pthread_t UpdThread;
 
 
-// 2....Å¬·¡½º °´Ã¼ »ı¼ºÇÏ±â
+// 2....í´ë˜ìŠ¤ ê°ì²´ ìƒì„±í•˜ê¸°
 Guess guess;
-// 3....ÀÌ¹ÌÁö¸¦ ´ãÀ» Å¥»ı¼º
+// 3....ì´ë¯¸ì§€ë¥¼ ë‹´ì„ íìƒì„±
 deque<Mat> frameSeq;
 
-// ÀÌ¹ÌÁö¸¦ ÀĞ¾î¼­ QUEUE¿¡ ´ã´Â ¾²·¹µå 
+// ì´ë¯¸ì§€ë¥¼ ì½ì–´ì„œ QUEUEì— ë‹´ëŠ” ì“°ë ˆë“œ 
 void* UpdateFrame(void* arg)
 {
     for (;;)
@@ -31,7 +31,7 @@ void* UpdateFrame(void* arg)
         vcap >> tempFrame;
 
         frame = tempFrame;
-        // queue¿¡ ÀÌ¹ÌÁö ´ã±â
+        // queueì— ì´ë¯¸ì§€ ë‹´ê¸°
         frameSeq.push_back(frame.clone());
         //if framneSeq    
 
@@ -66,7 +66,7 @@ int main(int, char**)
         imshow("Input Image", frameSeq.front());
         guess.showimage(currentFrame);
 
-        //ESCÅ°¸¦ ´©¸£¸é ¾²·¹µå¸¦ °­Á¦ Á¾·áÈÄ.. ÇÁ·Î±×·¥ Á¾·áÇÑ´Ù. 
+        //ESCí‚¤ë¥¼ ëˆ„ë¥´ë©´ ì“°ë ˆë“œë¥¼ ê°•ì œ ì¢…ë£Œí›„.. í”„ë¡œê·¸ë¨ ì¢…ë£Œí•œë‹¤. 
         if (waitKey(20) == 27)
         {
 
@@ -75,13 +75,13 @@ int main(int, char**)
 
             if (ret == 0)
             {
-                //ÀÚµ¿ Á¾·á    
+                //ìë™ ì¢…ë£Œ    
                 ret = pthread_join(UpdThread, (void**)&status);
                 if (ret == 0)
-                    //°­Á¦ Á¾·á½ÃÅ°¸é status·Î -1ÀÌ ¸®ÅÏµÈ´Ù. 
-                    cout << "½º·¹µå Á¾·á ¼º°ø" << status << endl;
+                    //ê°•ì œ ì¢…ë£Œì‹œí‚¤ë©´ statusë¡œ -1ì´ ë¦¬í„´ëœë‹¤. 
+                    cout << "ìŠ¤ë ˆë“œ ì¢…ë£Œ ì„±ê³µ" << status << endl;
                 else
-                    cout << "½º·¹µå Á¾·á ¿¡·¯" << ret << endl;
+                    cout << "ìŠ¤ë ˆë“œ ì¢…ë£Œ ì—ëŸ¬" << ret << endl;
 
                 break;
             }
