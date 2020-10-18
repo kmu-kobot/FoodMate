@@ -1,8 +1,13 @@
 #include "opencv2/opencv.hpp"
+#include "opencv2/imgcodecs.hpp"
+#include "opencv2/highgui.hpp"
+#include "opencv2/imgproc.hpp"
 #include <iostream>  
   
 using namespace cv;  
 using namespace std;  
+
+
 
 
 typedef struct value{
@@ -16,111 +21,77 @@ typedef struct value{
 
 class Board{
     private:
-        Mat img;
+        Mat src;
         int count = 0;
         vector<int> box_x;
         vector<int> box_y;
+        int thresh = 70;
+        Mat src_gray;
 
     public:
         Board(){
             //image load  
-            img = imread("Scanned_image.jpg");
-
-            //cant find image
-            if(img.empty()){ cout<<"no image"<<endl;}
+            src = imread("Scanned_image.jpg");
+            if(src.empty() )
+            {
+                cout << "Could not open or find the image!\n" << endl;
+            }
 
         }
-        #
-        values edgeOfBoard(){
-            Mat img_gray;
-            Mat img_edge;
-            values v;
-
-            cvtColor(img, img_gray, COLOR_BGR2GRAY);
-            Canny(img_gray, img_edge, 100, 200);
+        
+        void thresh_callback()
+        {
             
-            int rows, cols;
-            rows = img_edge.rows;
-            cols = img_edge.cols;
-            v.x_start, v.x_end, v.y_start, v.y_end = 0;   
+        
+            cvtColor( src, src_gray, COLOR_BGR2GRAY );
+            blur( src_gray, src_gray, Size(3,3) );
 
-
-            for(int i = 0; i < cols; ++i){
-                if(img_edge.at<int>(rows / 8, i) != 0 && v.x_start){
-                    v.x_start;
-                    }
-                else if(img_edge.at<int>(rows / 8, cols - i) != 0 && v.y_start == 0){
-                    v.x_end = cols - i;
-                }
-                if(v.x_start != 0 && v.x_end != 0){
-                    break;
-                }
-            }
-
-            for(int i = 0; i < rows; ++i){
-                if(img_edge.at<int>(i, cols/2) != 0 && v.y_start == 0){
-                    v.y_start = i;
-                }
-                else if(img_edge.at<int>(rows - i, cols / 2) != 0 && v.y_end == 0){
-                    v.y_end = rows - i;
-                }
-                if(v.y_start != 0 && v.y_end != 0){
-                    break;
-                }
-            }
-
-            return v;
-        }
-
-        void frgm_board(values v){
-            int count = 0;
-            Mat cut_img = img(Range(v.y_start, v.y_end), Range(v.x_start, v.x_end));
-
-            cut_img = copy(img);
-
-            all_menu = cut_img;
-
-                        
-            int rows, cols;
-            rows = img_edge.rows;
-            cols = img_edge.cols;
-            v.x_start, v.x_end, v.y_start, v.y_end = 0;  
-
-            Mat imgBlur;
-            Mat gray;
-            Mat thr;
-            vector<vector<Point>> contours;
-	        vector<Vec4i> hierarchy;
-            gaussianBlur(img, imgBlur , Size(5, 5), 1.0);
-
-            cvtColor(imgBlur, img_gray, COLOR_BGR2GRAY);
-
-            Laplacian(img_gray,thr, CV_8U, ksize = 3);
-
-            findContours(thr, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
-
-            int cnt = contuors.size();
-
-            for(int i = 0; i < cnt; ++i){
-                Rect rt1 =  contours[i].boundingRect();
-                if((cols/2 > rt1.width && rt1.width > cols / 10) && (rows/1.5 > rt1.height && rt1.height > rows/4)){
-                    rectangle(all_menu, )
-                }
-
-
-            }
+            Mat canny_output;
+            Canny( src_gray, canny_output, thresh, thresh*2 );
             
+            vector<vector<Point> > contours;
+            findContours( canny_output, contours, RETR_TREE, CHAIN_APPROX_SIMPLE );
+            
+            
+            vector<vector<Point> > contours_poly( contours.size() );
+            vector<Rect> boundRect( contours.size() );
+            vector<Point2f>centers( contours.size() );
+            vector<float>radius( contours.size() );
+
+            for( size_t i = 0; i < contours.size(); i++ )
+            {   
+                approxPolyDP( contours[i], contours_poly[i], 20, true );
+                
+                if(contourArea(contours_poly[i]) < 150 || contourArea(contours_poly[i]) > 1000 ){
+                    continue;
+                }
+                cout<<contourArea(contours_poly[i])<<endl;
+                boundRect[i] = boundingRect( contours_poly[i] );
+            
+            }
+
+            Mat drawing = Mat::zeros( canny_output.size(), CV_8UC3 );
+            
+            for( size_t i = 0; i< contours.size(); i++ )
+            {
+                drawContours( drawing, contours_poly, (int)i, (0,0,255) );
+                rectangle( drawing, boundRect[i].tl(), boundRect[i].br(), (0,0,255), 2 );
+                
+            }
+            imshow( "Contours", drawing );
+            waitKey();
         }
+
+
 
 };
 
 
-  
-int main()  
-{  
-    values v; 
+int main()
+{
+    
+
     Board b = Board();
-    b.frgm_board(v);
+    b.thresh_callback();
     return 0;
 }
-
