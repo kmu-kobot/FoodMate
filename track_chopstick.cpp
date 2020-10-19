@@ -88,6 +88,8 @@ int main(int, char**)
 		///////////////////////////////////////////////////////////////
 		Mat kernel = getStructuringElement(MORPH_RECT, Size(5, 5), Point(-1, -1));
 		morphologyEx(foregroundMask, foregroundMask, MORPH_CLOSE, kernel);
+
+
 		Vec4i l = NULL;
 		l = detect_chopstic(foregroundMask, 80, 15, 100);
 		// show live and wait for a key with timeout long enough to show images
