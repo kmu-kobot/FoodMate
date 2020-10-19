@@ -34,6 +34,7 @@ int main(int, char**) {
 
     return 0;
 }
+
 // �̹����� �о Queue�� ��� ������
 void* producer_run(void* arg) {
 
