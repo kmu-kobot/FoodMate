@@ -1,6 +1,6 @@
 import cv2 as cv
 import numpy as np
-
+import time
 """
 def make_mask_image(img_bgr):
     img_hsv = cv.cvtColor(img_bgr, cv.COLOR_BGR2HSV)
@@ -56,15 +56,19 @@ cap = cv.VideoCapture(0)
 
 fgbg = cv.createBackgroundSubtractorMOG2(varThreshold=300, detectShadows=0)
 
-index = 0
-
+prevTime = 0
 while (1):
-    index = index + 1
 
     ret, frame = cap.read()
     if ret == False:
         break
-
+    curTime = time.time()
+    sec = curTime - prevTime
+    prevTime = curTime
+    fps = 1 / (sec)
+    print("Time {0} ".format(sec))
+    print("Estimated fps {0} ".format(fps))
+    str = "FPS : %0.1f" % fps
     frame = cv.flip(frame, 1)
     # 살색 제거 마스크 이미지
     # mask_img = make_mask_image(frame)
@@ -92,6 +96,7 @@ while (1):
         cv.circle(frame, (c_x, c_y), r, (0, 255, 0), 5)
         cv.circle(frame, (c_x, c_y), 10, (255, 0, 0), -1)
     # 원본 이미지
+    cv.putText(frame, str, (0, 100), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0))
     cv.imshow('img', frame)
     # 차영상
     cv.imshow('result', fgmask)
