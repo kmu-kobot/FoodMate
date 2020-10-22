@@ -1,21 +1,19 @@
 import cv2 as cv
 import numpy as np
 import time
-"""
+
 def make_mask_image(img_bgr):
     img_hsv = cv.cvtColor(img_bgr, cv.COLOR_BGR2HSV)
 
     # img_h,img_s,img_v = cv.split(img_hsv)
 
-    low = (0, 30, 0)
+    low = (0, 20, 0)
 
-    high = (15, 255, 255)
+    high = (25, 255, 255)
 
     img_mask = cv.inRange(img_hsv, low, high)
     img_mask = cv.bitwise_not(img_mask)
     return img_mask
-"""
-
 
 def detect_chopstic(img, thr, minLineLength, maxLineGap):
     edges = cv.Canny(img, 50, 150, apertureSize=3)
@@ -43,7 +41,7 @@ def detect_chopstic(img, thr, minLineLength, maxLineGap):
 
 def detect_spoon(img):
     circles = cv.HoughCircles(img, cv.HOUGH_GRADIENT, 1, 10,
-                              param1=50, param2=12, minRadius=30, maxRadius=60)
+                              param1=50, param2=12, minRadius=20, maxRadius=60)
     if circles is None:
         return None, None, None
     x = np.uint16(np.around(circles))[0][0][0]
@@ -71,19 +69,19 @@ while (1):
     str = "FPS : %0.1f" % fps
     frame = cv.flip(frame, 1)
     # 살색 제거 마스크 이미지
-    # mask_img = make_mask_image(frame)
+    mask_img = make_mask_image(frame)
 
     # 차영상 검출
     blur = cv.GaussianBlur(frame, (5, 5), 0)
     fgmask = fgbg.apply(blur, learningRate=0)
     kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE, (5, 5))
     fgmask = cv.morphologyEx(fgmask, cv.MORPH_CLOSE, kernel, 2)
-    #########################################
-    # x1,y1,x2,y2 = detect_chopstic(fgmask, 80)
-    # fgmask = cv.bitwise_and(mask_img, fgmask)
-    # fgmask = cv.medianBlur(fgmask,9)
-    # cv.imshow('mask', mask_img)
-    ###########################################
+
+    x1,y1,x2,y2 = detect_chopstic(fgmask, 90, 15, 100)
+    fgmask = cv.bitwise_and(mask_img, fgmask)
+    fgmask = cv.medianBlur(fgmask,9)
+    cv.imshow('mask', mask_img)
+
     # 젓가락 끝점 좌표
     x1, y1, x2, y2 = detect_chopstic(fgmask, 90, 15, 100)
     c_x, c_y, r = detect_spoon(fgmask)

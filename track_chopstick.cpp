@@ -32,7 +32,6 @@ Vec3f detect_spoon(Mat img, int minDistance, int thr)
 {
 	Mat img_canny;
 	Canny(img, img_canny, 50, 150);
-	imshow("canny", img_canny);
 	vector<Vec3f> circles;
 	HoughCircles(img_canny, circles, HOUGH_GRADIENT, 1, minDistance, thr, thr / 2, 10, 50);
 
@@ -90,8 +89,10 @@ int main(int, char**)
 		morphologyEx(foregroundMask, foregroundMask, MORPH_CLOSE, kernel);
 
 
+
+		//detect chopstick
 		Vec4i l = NULL;
-		l = detect_chopstic(foregroundMask, 80, 15, 100);
+		l = detect_chopstic(foregroundMask, 70, 15, 100);
 		// show live and wait for a key with timeout long enough to show images
 		if (l[0] > 0 && l[1] > 0 && l[2] > 0 && l[3] > 0)
 		{
@@ -101,13 +102,15 @@ int main(int, char**)
 			int y = l[1] > l[3] ? l[3] : l[1];
 			circle(frame, Point(x, y), 5, Scalar(255, 0, 0), -1);
 		}
-		Vec3f c = NULL;
 		//detect spoon
-		c = detect_spoon(foregroundMask, 100, 30);
+		/*
+		Vec3f c = NULL;
+		c = detect_spoon(foregroundMask, 10, 30);
 		if (c[0] > 0 && c[1] > 0 && c[2] > 0)
 		{
 			circle(frame, Point(c[0], c[1]), c[2], Scalar(0, 255, 0), 2);
 		}
+		*/
 		imshow("Live", frame);
 		imshow("mask", foregroundMask);
 		if (waitKey(5) >= 0)
