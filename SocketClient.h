@@ -6,6 +6,9 @@
 #include <string.h>
 #include <string>
 #include <arpa/inet.h>
+#include <opencv2/opencv.hpp>
+
+using namespace cv;
 
 const int MAXHOSTNAME = 200;
 const int MAXCONNECTION = 5;
@@ -22,7 +25,7 @@ public:
     bool connect(const std::string host, const int port);
 
     // data transmission
-    bool send(const std::string) const;
+    bool send(cv::Mat &mat,const std::string mark) const;
 
     int recv(std::string &) const;
     bool is_valid();

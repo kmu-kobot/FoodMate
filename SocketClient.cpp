@@ -1,5 +1,6 @@
 #include "SocketClient.h"
 #include <iostream>
+#include <cstddef>
 #include <opencv2/opencv.hpp>
 
 using namespace cv;
@@ -32,17 +33,22 @@ bool SocketClient::is_valid(){
     return client_socket !=-1;
 }
 
-bool SocketClient::send(const Mat &mat) const
+bool SocketClient::send(Mat &mat, const std::string mark) const
 {   
     if(!mat.data)[
         std::cout<<"mat.data not found\n"<<std::endl;
         return -1;
     ]
+
     mat = mat.reshape(0,1);
     int imgSize = mat.total()*mat.elemSize();
-    
-	int bytes = ::send(client_socket, mat.data, imgSize, 0);
-	if(bytes == -1) return false;
+
+	std::string matAsString(mat.datastart, mat.dataend);
+	//mark-> '\n\b\n\bstart'or '\n\b\n\bend' or '\n\b\n\b'
+	int status = ::send(client_socket, matAsString+mark, imgSize, 0); // send
+	// int status = ::send(client_socket, img.data, imgSize, 0); // send
+
+	if(status == -1) return false;
 	else
 		return true;
 }
