@@ -4,6 +4,7 @@
 #include <opencv2/opencv.hpp>
 
 using namespace cv;
+using namespace std;
 
 SocketClient::SocketClient():client_socket(-1)
 {
@@ -33,19 +34,19 @@ bool SocketClient::is_valid(){
     return client_socket !=-1;
 }
 
-bool SocketClient::send(Mat &mat, const std::string mark) const
+bool SocketClient::send(Mat &mat, const string mark) const
 {   
-    if(!mat.data)[
-        std::cout<<"mat.data not found\n"<<std::endl;
+    if(!mat.data){
+        cout<<"mat.data not found\n"<<endl;
         return -1;
-    ]
+	}
 
     mat = mat.reshape(0,1);
     int imgSize = mat.total()*mat.elemSize();
 
-	std::string matAsString(mat.datastart, mat.dataend);
+	string matAsString(mat.datastart, mat.dataend);
 	//mark-> '\n\b\n\bstart'or '\n\b\n\bend' or '\n\b\n\b'
-	int status = ::send(client_socket, matAsString+mark, imgSize, 0); // send
+	int status = ::send(client_socket, (matAsString+mark).c_str(), imgSize, 0); // send
 	// int status = ::send(client_socket, img.data, imgSize, 0); // send
 
 	if(status == -1) return false;
@@ -53,7 +54,7 @@ bool SocketClient::send(Mat &mat, const std::string mark) const
 		return true;
 }
 
-int SocketClient::recv(std::string& s) const
+int SocketClient::recv(string& s) const
 {
 	char buf[MAXRECV + 1];
 
@@ -66,7 +67,7 @@ int SocketClient::recv(std::string& s) const
 
 	if(recv_length == -1)
 	{
-		std::cout << "status == -1 errno == " << errno << " in SocketClient::recv\n";
+		cout << "status == -1 errno == " << errno << " in SocketClient::recv\n";
 		return 0; 
 	}
 	else if(recv_length== 0)
@@ -82,8 +83,6 @@ int SocketClient::recv(std::string& s) const
 	//std::string recv_str;
 	// conn_sock.recv(recv_str);
 	// std::cout << "recved: " << recv_str << std::endl;
-
-
 }
 
 

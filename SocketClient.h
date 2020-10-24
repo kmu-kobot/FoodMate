@@ -9,6 +9,7 @@
 #include <opencv2/opencv.hpp>
 
 using namespace cv;
+using namespace std;
 
 const int MAXHOSTNAME = 200;
 const int MAXCONNECTION = 5;
@@ -22,12 +23,12 @@ public:
     // initialization
     bool create();
 
-    bool connect(const std::string host, const int port);
+    bool connect(const :string host, const int port);
 
     // data transmission
-    bool send(cv::Mat &mat,const std::string mark) const;
+    bool send(Mat &mat,const string mark) const;
 
-    int recv(std::string &) const;
+    int recv(string &) const;
     bool is_valid();
 
 private:
