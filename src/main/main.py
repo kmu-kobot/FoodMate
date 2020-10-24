@@ -7,6 +7,7 @@ import numpy
 import cv2
 import ctypes  # c++ 파일 사용하기
 
+import subprocess
 
 
 class Main:
@@ -16,10 +17,10 @@ class Main:
         self.guess = Guess()
 
         # .......... 1. Server  TCP 소켓 열고 수신 대기
-        if os.path.exists("/tmp/socket_test.s"):
-            os.remove("/tmp/socket_test.s")
-        self.server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-        self.server.bind("/tmp/socket_test.s")
+        TCP_IP = 'localhost'
+        TCP_PORT = int(sys.argv[1])
+        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server.bind((TCP_IP, TCP_PORT))
         self.server.listen(1)
 
     def make_child_process(self):
@@ -33,8 +34,8 @@ class Main:
             # 1.... Child process
             if pid == 0:
                 child_cnt += 1
-                self.get_img = self.connect_C_client()  # c++ 클라이언트 생성하기
-
+                file = 'C:\\Exe\\First Version\\filename.exe'
+                subprocess.call([file])
 
             # 2.... Parent process
             else:
@@ -44,20 +45,20 @@ class Main:
                     conn, addr = self.server.accept()
                     length = self.recvall(conn, 16)
                     stringData = self.recvall(conn, int(length))
-                    # .......... 3. 이미지 데이터
-                    data = numpy.fromstring(stringData, dtype='uint8')
-                    decimg = cv2.imdecode(data, 1)
-                    # img_cnt += 1
-                    # path = '../data/img'
-                    # cv2.imwrite(path + '/'+ img_cnt, decimg)
-                    # images_notsorted = os.listdir(path)
-
-                    # # 3. keras로 음식 맞추기
-                    # self.guess.realGuess()  # 일단 급식판에 무슨 음식이 있는지 학습
-                    # self.answer = self.guess.matchFood(self.Cx, self.Cy, self.board.box_x, self.board.box_y)
-
-                    # 4. 도출된 답 전송하기
-
+                    endMark = stringData.split(b'\n\b\n\b')[-1].decode()
+                    if endMark == "save":
+                        # .......... 3. 이미지 데이터,  받은 이미지를 저장한다.
+                        data = numpy.fromstring(stringData, dtype='uint8')
+                        decimg = cv2.imdecode(data, 1)
+                        img_cnt += 1
+                        path = '../data/img'
+                        cv2.imwrite(path + '/image' + str(img_cnt), decimg)
+                    elif endMark == "end":
+                        # 3. keras로 음식 맞추기
+                        result = self.guess.realGuess()  # 일단 급식판에 무슨 음식이 있는지 학습
+                        # 4. 도출된 답 전송하기
+                        result = "\n\b\n\b".join(result)
+                        conn.send(result.encode('utf-8'))
 
 
     # socket 수신 버퍼를 읽어서 반환하는 함수
