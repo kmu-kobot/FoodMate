@@ -12,6 +12,8 @@
 using namespace cv;
 using namespace std;
 
+
+
 Vec4i detect_chopstic(Mat img, int thr, int minLineLength, int maxLineGap)
 {
 	Mat img_canny;
@@ -32,6 +34,7 @@ Vec3f detect_spoon(Mat img, int minDistance, int thr)
 {
 	Mat img_canny;
 	Canny(img, img_canny, 50, 150);
+	imshow("canny", img_canny);
 	vector<Vec3f> circles;
 	HoughCircles(img_canny, circles, HOUGH_GRADIENT, 1, minDistance, thr, thr / 2, 10, 50);
 
@@ -43,10 +46,23 @@ Vec3f detect_spoon(Mat img, int minDistance, int thr)
 	return circles[0];
 }
 
+Mat make_mask_image(Mat frame)
+{
+	Mat img_YCrCb;
+	Mat mask;
+	cvtColor(frame, img_YCrCb, COLOR_BGR2YCrCb);
+	inRange(img_YCrCb, Scalar(0, 133, 77), Scalar(255, 173, 127), mask);
+	//vector<Mat> planes;
+	//split(img_YCrCb, planes);
+	//Mat mask = (128 < planes[1]) & (planes[1] < 170) & (73 < planes[2]) & (planes[2] < 158);
+
+	bitwise_not(mask, mask);
+	return mask;
+}
 
 int main(int, char**)
 {
-	Mat frame, blur, foregroundMask;
+	Mat frame, blur, mask_img, foregroundMask;
 	//--- INITIALIZE VIDEOCAPTURE
 	VideoCapture cap;
 	// open the default camera using default API
@@ -83,12 +99,19 @@ int main(int, char**)
 		if (foregroundMask.empty()) {
 			foregroundMask.create(frame.size(), frame.type());
 		}
+
+
+		mask_img = make_mask_image(frame);
+		imshow("mask_img", mask_img);
 		bg_model->apply(blur, foregroundMask, false);
 		///////////////////////////////////////////////////////////////
 		Mat kernel = getStructuringElement(MORPH_RECT, Size(5, 5), Point(-1, -1));
 		morphologyEx(foregroundMask, foregroundMask, MORPH_CLOSE, kernel);
 
 
+		bitwise_and(mask_img, foregroundMask, foregroundMask);
+		medianBlur(foregroundMask, foregroundMask, 9);
+		imshow("mask", foregroundMask);
 
 		//detect chopstick
 		Vec4i l = NULL;
@@ -103,14 +126,15 @@ int main(int, char**)
 			circle(frame, Point(x, y), 5, Scalar(255, 0, 0), -1);
 		}
 		//detect spoon
-		/*
+
 		Vec3f c = NULL;
 		c = detect_spoon(foregroundMask, 10, 30);
 		if (c[0] > 0 && c[1] > 0 && c[2] > 0)
 		{
 			circle(frame, Point(c[0], c[1]), c[2], Scalar(0, 255, 0), 2);
+			circle(frame, Point(c[0], c[1]), 2, Scalar(255, 0, 0), -1);
 		}
-		*/
+
 		imshow("Live", frame);
 		imshow("mask", foregroundMask);
 		if (waitKey(5) >= 0)
