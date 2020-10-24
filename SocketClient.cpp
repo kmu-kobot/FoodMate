@@ -59,26 +59,33 @@ int SocketClient::recv(std::string& s) const
 
 	s = "";
 
-	memset(buf, 0, MAXRECV + 1);
+	memset(buf, 0, MAXRECV + 1); // MAXRECV +1 만큼 0으로 채우고
  
 
-	int status = ::recv(client_socket, buf, MAXRECV, 0);
+	int recv_length = ::recv(client_socket, buf, MAXRECV, 0);
 
-	if(status == -1)
+	if(recv_length == -1)
 	{
 		std::cout << "status == -1 errno == " << errno << " in SocketClient::recv\n";
 		return 0; 
 	}
-	else if(status == 0)
+	else if(recv_length== 0)
 	{
 		return 0;
 	}
 	else
 	{
-		s = buf;
-		return status;
+		s = buf; // 
+		return recv_length; // \n\b\n\b는 밖에서 분리하는건?
 	}
+
+	//std::string recv_str;
+	// conn_sock.recv(recv_str);
+	// std::cout << "recved: " << recv_str << std::endl;
+
+
 }
+
 
 bool SocketClient::connect(const std::string host, const int port)
 {
