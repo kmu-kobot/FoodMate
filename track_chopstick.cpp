@@ -32,7 +32,7 @@ public:
 	Vec3f detect_spoon(Mat img, int minDistance, int thr)
 	{
 		circles.clear();
-		HoughCircles(img, circles, HOUGH_GRADIENT, 1, minDistance, thr, thr / 2, 10, 50);
+		HoughCircles(img, circles, HOUGH_GRADIENT, 1, minDistance, thr, thr / 2, 10, 70);
 		if (circles.empty())
 		{
 			return NULL;
@@ -59,7 +59,7 @@ public:
 		//frame 영상 전처리(640x480, 좌우반전, 3x3 가우시안 블러)
 		resize(frame, frame, Size(640, 480));
 		flip(frame, frame, 1);
-		GaussianBlur(frame, blur, Size(3, 3), 0);
+		GaussianBlur(frame, blur, Size(5, 5), 0);
 
 		//초기 차영상 마스크 Mat 생성
 		if (foreground_mask.empty())
@@ -67,9 +67,9 @@ public:
 			foreground_mask.create(frame.size(), frame.type());
 		}
 
-		// 1.차영상 마스크 씌우고 노이즈 제거(5x5 미디언 필터)
+		// 1.차영상 마스크 씌우고 노이즈 제거(9x9 미디언 필터)
 		bg_model->apply(blur, foreground_mask);
-		Mat kernel = getStructuringElement(MORPH_RECT, Size(5, 5), Point(-1, -1));
+		Mat kernel = getStructuringElement(MORPH_RECT, Size(9, 9), Point(-1, -1));
 		morphologyEx(foreground_mask, foreground_mask, MORPH_CLOSE, kernel);
 		medianBlur(foreground_mask, foreground_mask, 5);
 
@@ -88,7 +88,7 @@ public:
 		// 5.숟가락을 찾으면 바로 반환하고, 숟가락이 없으면 젓가락 좌표 반환
 		//숟가락 포인트
 		Vec3f s = NULL;
-		s = detect_spoon(img_canny, 10, 30);
+		s = detect_spoon(img_canny, 10, 50);
 		if (s[0] > 0 && s[1] > 0 && s[2] > 0)
 		{
 			circle(frame, Point(s[0], s[1]), s[2], Scalar(0, 255, 0), 2);
