@@ -23,15 +23,18 @@ public:
     // initialization
     bool create();
 
-    bool connect(const :string host, const int port);
+    bool connect(const string host, const int port);
 
     // data transmission
-    bool send(Mat &mat,const string mark) const;
+    void sendImage(Mat img) const;
 
     int recv(string &) const;
     bool is_valid();
 
+    void close_socket();
+
 private:
     int client_socket;
     struct sockaddr_in server_addr;
+    const int size_message_length_ = 16;  // Buffer size for the length
 };

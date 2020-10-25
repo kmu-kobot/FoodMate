@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cstddef>
 #include <opencv2/opencv.hpp>
+#include <vector>
 
 using namespace cv;
 using namespace std;
@@ -34,25 +35,55 @@ bool SocketClient::is_valid(){
     return client_socket !=-1;
 }
 
-bool SocketClient::send(Mat &mat, const string mark) const
+// bool SocketClient::send(Mat &mat, const string mark) const
+// {   
+//     if(!mat.data){
+//         cout<<"mat.data not found\n"<<endl;
+//         return -1;
+// 	}
+
+//     mat = mat.reshape(0,1);
+//     int imgSize = mat.total()*mat.elemSize();
+
+// 	string matAsString(mat.datastart, mat.dataend);
+// 	//mark-> '\n\b\n\bsave'or '\n\b\n\bend' or '\n\b\n\b'
+// 	int status = ::send(client_socket, (matAsString+mark).c_str(), imgSize, 0); // send
+// 	// int status = ::send(client_socket, img.data, imgSize, 0); // send
+
+// 	if(status == -1) return false;
+// 	else
+// 		return true;
+// }
+void SocketClient::sendImage(Mat img) const
 {   
-    if(!mat.data){
-        cout<<"mat.data not found\n"<<endl;
-        return -1;
-	}
+    // if(!img.data){
+    //     cout<<"mat.data not found\n"<<endl;
+    //     return -1;
+	// }
+	int pixel_number = img.rows * img.cols / 2;
 
-    mat = mat.reshape(0,1);
-    int imgSize = mat.total()*mat.elemSize();
+	vector<uchar> buf(pixel_number);
+	imencode(".jpg", img, buf);
 
-	string matAsString(mat.datastart, mat.dataend);
-	//mark-> '\n\b\n\bstart'or '\n\b\n\bend' or '\n\b\n\b'
-	int status = ::send(client_socket, (matAsString+mark).c_str(), imgSize, 0); // send
-	// int status = ::send(client_socket, img.data, imgSize, 0); // send
+	int length = buf.size();
+	string length_str = to_string(length);
+	string message_length =
+		string(size_message_length_ - length_str.length(), '0') + length_str;
 
-	if(status == -1) return false;
-	else
-		return true;
+	send(client_socket, message_length.c_str(), size_message_length_, 0);
+	send(client_socket, buf.data(), length, 0);
+	// string s ="";
+	// const char *inputD = (const char*)(img.data);
+	// Size imageSiz = img.size(); //cv::Size
+	// int w = imageSiz.width;
+	// int h = imageSiz.height;
+	// int ch = img.channels();
+	// int total_length= w*h*ch;
+	// s.append(inputD, w*h*ch);
+	// send(client_socket, (s+"\n\b\n\bsave").c_str(),total_length+9,0);
 }
+
+   
 
 int SocketClient::recv(string& s) const
 {
@@ -105,4 +136,7 @@ bool SocketClient::connect(const std::string host, const int port)
 		return true;
 	else
 		return false;
+}
+void SocketClient::close_socket(){
+	close(client_socket);
 }
