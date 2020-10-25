@@ -1,8 +1,8 @@
 #pragma once
 using namespace cv;
-
-
-// image�� �޾Ƽ� Tracking�ϴ� -> matching Thread
+using namespace std;
+#include "opencv2/opencv.hpp"
+// image¸¦ ¹Þ¾Æ¼­ TrackingÇÏ´Â -> matching Thread
 
 
 
@@ -13,3 +13,4 @@ public:
 	
 	void* consumer_doing(const Mat& frame, vector<pair<string, Rect>>& v);
 };
+
