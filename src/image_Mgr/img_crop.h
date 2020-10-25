@@ -3,7 +3,7 @@
 
 class Board{
     private:
-        Mat src;
+
         int thresh;
 
 
@@ -15,7 +15,7 @@ class Board{
         
         Mat get_target_area(Mat src){return crop_img;}
 
-        vector<Mat> thresh_callback(){return crop_img;}
+        vector<Mat> thresh_callback(Mat src){return crop_img;}
 };
 
 #endif
