@@ -136,7 +136,7 @@ class Board{
                 rectangle(src, boundRect[i].tl(), boundRect[i].br(), (0,0,255), 2 );
                 cout<<boundRect[i].x<<" "<< boundRect[i].y<<" "<<boundRect[i].width<<" "<<boundRect[i].height<<endl;
                 crop_img = src(boundRect[i]);
-                //imwrite(to_string(count) + ".jpg", crop_img);
+                imwrite(to_string(count) + ".jpg", crop_img);
                 ++count;
             
             }
