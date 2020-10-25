@@ -28,9 +28,10 @@ Mat Board::img_preproces(Mat src)
     return canny_output;
 }
 
-Mat Board::get_target_area(Mat src)
+board_obj Board::get_target_area(Mat src)
 {
 
+    board_obj my_board_obj;
     //이미지에서 식판의 영역만을 추출
     Mat img_pre = img_preproces(src);
 
@@ -64,19 +65,21 @@ Mat Board::get_target_area(Mat src)
     rectangle(src, boundRect.tl(), boundRect.br(), (0, 0, 255), 2);
 
     // 식판의 중심을 구한다.
-    Point center_board = Point((boundRect.x + boundRect.width) / 2, (boundRect.y + boundRect.height) / 2);
+    my_board_obj.center_board = Point((boundRect.x + boundRect.width) / 2, (boundRect.y + boundRect.height) / 2);
 
 
     //사각형을 관심영역으로 하고 이미지를 crop
-    Mat crop_img = src(boundRect);
-    imshow("Contours", crop_img);
+    my_board_obj.crop_imgs = src(boundRect);
+    imshow("Contours", my_board_obj.crop_imgs);
     waitKey();
 
-    return crop_img;
+    return my_board_obj;
 }
 
-vector<Mat> Board::frgm_board(Mat src)
+frgm_obj Board::frgm_board(Mat src)
 {
+
+    frgm_obj my_frgm_obj;
     //이미지 전처리
     Mat img_pre = img_preproces(src);
 
@@ -106,8 +109,7 @@ vector<Mat> Board::frgm_board(Mat src)
     }
 
     Mat drawing = Mat::zeros(img_pre.size(), CV_8UC3);
-    vector<Mat> crop_img; // 잘린 이미지를 담는곳
-    vector<Rect> crop_Rect; // 잘린 이미지의 위치를 담는곳 
+
 
 
     //위에서 구한 사각형 영역을 음식의 영역으로 인식하고
@@ -117,11 +119,11 @@ vector<Mat> Board::frgm_board(Mat src)
         drawContours(drawing, contours_poly, (int)i, (0, 0, 255));
         rectangle(src, boundRect[i].tl(), boundRect[i].br(), (0, 0, 255), 2);
         cout << boundRect[i].x << " " << boundRect[i].y << " " << boundRect[i].width << " " << boundRect[i].height << endl;
-        crop_img.push_back(src(boundRect[i]));
-        crop_Rect.push_back(boundRect[i]);
+        my_frgm_obj.crop_imgs.push_back(src(boundRect[i]));
+        my_frgm_obj.crop_Rects.push_back(boundRect[i]);
     }
     imshow("Contours", src);
     waitKey();
 
-    return crop_img;
+    return my_frgm_obj;
 }
