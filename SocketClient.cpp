@@ -60,8 +60,8 @@ void SocketClient::sendImage(Mat img) const
     //     cout<<"mat.data not found\n"<<endl;
     //     return -1;
 	// }
-	int pixel_number = img.rows * img.cols / 2;
 
+	int pixel_number = img.rows * img.cols / 2;
 	vector<uchar> buf(pixel_number);
 	imencode(".jpg", img, buf);
 
@@ -72,6 +72,7 @@ void SocketClient::sendImage(Mat img) const
 
 	send(client_socket, message_length.c_str(), size_message_length_, 0);
 	send(client_socket, buf.data(), length, 0);
+	// send(client_socket, "\n\b\n\bsave", 9, 0);
 	// string s ="";
 	// const char *inputD = (const char*)(img.data);
 	// Size imageSiz = img.size(); //cv::Size
@@ -80,8 +81,10 @@ void SocketClient::sendImage(Mat img) const
 	// int ch = img.channels();
 	// int total_length= w*h*ch;
 	// s.append(inputD, w*h*ch);
-	// send(client_socket, (s+"\n\b\n\bsave").c_str(),total_length+9,0);
+	// // send(client_socket, (s.append("\n\b\n\bsave")).c_str(),total_length+9,0);
+	// send(client_socket, s,total_length+9,0);
 }
+
 
    
 

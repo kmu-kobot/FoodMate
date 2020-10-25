@@ -5,7 +5,7 @@ import cv2
 def recvall(sock, count):
     buf = b''
     while count:
-        newbuf = sock.recv(count)
+        newbuf = (sock.recv(count))
         if not newbuf: return None
         buf += newbuf
         count -= len(newbuf)
@@ -18,6 +18,12 @@ conn, addr = server.accept()
 conn.send("hello".encode())
 length = recvall(conn, 16)
 stringData =recvall(conn, int(length))
-endMark = stringData.split(b'\n\b\n\b')[-1].decode()
-print(endMark)
-close()
+endMark = stringData
+# endMark = stringData.split(b'\n\b\n\b')[-1].decode('utf-8')
+# print(endMark)
+data = numpy.fromstring(stringData, dtype='uint8')
+decimg = cv2.imdecode(data, 1)
+cv2.imshow("IMAGE",decimg)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+conn.close()
