@@ -11,23 +11,13 @@ using namespace std;
 
 class Board{
     private:
-        Mat src;
+
         int thresh = 50;
 
 
 
     public:
-        Board(){
-            //image load  
-            src = imread("Scanned_image1.jpg");
-            resize(src, src, Size(600, 400));
-            //load fail
-            if(src.empty() )
-            {
-                cout << "Could not open or find the image!\n" << endl;
-            }
-
-        }
+        Board(){}
 
         Mat img_preproces(Mat src){
             //이미지 전처리 과정
