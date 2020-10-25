@@ -5,7 +5,7 @@
 using namespace cv;
 
 
-// image�� �޾Ƽ� Tracking�ϴ� -> matching Thread
+// image¸¦ ¹Þ¾Æ¼­ TrackingÇÏ´Â -> matching Thread
 
 
 class Consumer2 {
@@ -15,3 +15,4 @@ public:
 	void* consumer_doing(const Mat& frame, vector<pair<string, Rect>>& result);
 
 };
+
