@@ -38,8 +38,21 @@ int Filter::check_right(Mat src)
         approxPolyDP(contours[i], contours_poly[i], 20, true);
 
         if (contourArea(contours_poly[i]) < 600 || contourArea(contours_poly[i]) > 2000){
-            ++count;
+            continue;
         }  
+        ++count;
     }
+    cout<<count<<endl;
+
     return count;
+}
+
+
+
+int main(){
+
+    Mat src = imread("Scanned_image1.jpg");
+    Filter b = Filter();
+    b.check_right(src);
+
 }
