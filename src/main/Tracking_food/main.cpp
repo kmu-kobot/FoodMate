@@ -1,10 +1,10 @@
-﻿#include <stdio.h>
+#include <stdio.h>
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #define HAVE_STRUCT_TIMESPEC
 #include <pthread.h>
 #include <queue>
-#include <SocketClient.h>
+#include "SocketClient.h"
 #include <string>
 #include <semaphore.h>
 
