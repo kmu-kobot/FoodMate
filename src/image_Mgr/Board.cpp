@@ -10,6 +10,8 @@ using namespace cv;
 using namespace std;
 
 
+Board::Board(){}
+
 
 Mat Board::img_preproces(Mat src)
 {
@@ -118,3 +120,4 @@ vector<Mat> Board::thresh_callback(Mat src)
 
     return crop_img;
 }
+
