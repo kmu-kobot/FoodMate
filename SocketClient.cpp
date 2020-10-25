@@ -4,6 +4,7 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 #include <string.h>
+#include <stdlib.h>
 
 using namespace cv;
 using namespace std;
@@ -62,10 +63,24 @@ void SocketClient::sendImage(Mat img) const // image send success but not
     //     return -1;
 	// }
 
-	int pixel_number = img.rows * img.cols / 2;
-	vector<uchar> buf(pixel_number);
-	imencode(".jpg", img, buf);
 
+	// **
+	// int pixel_number = img.rows * img.cols / 2;
+	// vector<uchar> buf(pixel_number);
+	// imencode(".jpg", img, buf);
+
+	// int length = buf.size();
+	// string length_str = to_string(length);
+	// string message_length =
+	// 	string(size_message_length_ - length_str.length(), '0') + length_str;
+
+	// send(client_socket, message_length.c_str(), size_message_length_, 0);
+	// send(client_socket, buf.data(), length, 0);
+	// **
+	int pixel_number = img.rows * img.cols * 2;
+
+	vector<unsigned char> buf(pixel_number);
+	imencode(".jpg", img, buf);
 	int length = buf.size();
 	string length_str = to_string(length);
 	string message_length =
@@ -73,8 +88,18 @@ void SocketClient::sendImage(Mat img) const // image send success but not
 
 	send(client_socket, message_length.c_str(), size_message_length_, 0);
 	send(client_socket, buf.data(), length, 0);
-	
-	
+	// char *cbuf =(char*)malloc(buf.size()+9);
+	// memcpy(cbuf, buf.data(), buf.size());
+	// char *mark = "\n\b\n\bsave";
+	// strcat(cbuf, mark);
+	// int length = buf.size()+9;
+	// string length_str = to_string(length);
+	// string message_length =
+	// 	string(size_message_length_ - length_str.length(), '0') + length_str;
+
+	// send(client_socket, message_length.c_str(), size_message_length_, 0);
+	// send(client_socket, cbuf, length, 0);
+	// free(cbuf);
 	// send(client_socket, "\n\b\n\bsave", 9, 0);
 	// string s ="";
 	// const char *inputD = (const char*)(img.data);
@@ -88,7 +113,12 @@ void SocketClient::sendImage(Mat img) const // image send success but not
 	// send(client_socket, s,total_length+9,0);
 }
 
-
+void SocketClient::sendNumber(int number) const
+{
+	char s[10]; 
+	sprintf(s,"%d", number);
+	send(client_socket, s, 10, 0);
+}
    
 
 std::vector<std::string> SocketClient::recv() const

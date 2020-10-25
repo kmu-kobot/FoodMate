@@ -27,6 +27,8 @@ public:
 
     // data transmission
     void sendImage(Mat img) const;
+    
+    void sendNumber(int number) const;
 
     std::vector<std::string> recv() const;
     bool is_valid();
