@@ -1,4 +1,5 @@
 #include "Board.h"
+#include "Sound.h"
 #include "SocketClient.h"
 #include "Consumer1.h"
 #include <math.h>
@@ -11,10 +12,11 @@ using namespace cv;
 //.......... 필요한 객체들 생성
 Board board = Board();  
 SocketClient client = SocketClient();
-
+Sound sound = Sound();
 
 void* Consumer1::consumer_doing(const Mat& frame, vector<pair<string, Rect> >& matching_result) {
     
+
     // .......1 식판의 영역을 구한다.
     // 중심 check , 식판의 위치가 휘어지면 
     board_obj b_o= board.get_target_area(frame);  //이미지와 중심이 들어있는 구조체 반환
@@ -22,6 +24,10 @@ void* Consumer1::consumer_doing(const Mat& frame, vector<pair<string, Rect> >& m
 
     // 일정 수준이상 식판이 움직이면 아래의 과정을 수행한다.
     if (abs(board.pre_point.x - board.crnt_point.x) > 25 || abs(board.pre_point.y - board.crnt_point.y) > 25) {
+        // 스캔 시작 안내를 띄운다 
+        sound.play_sound("scan_start");
+        
+        
         Mat board_img = b_o.board_img;
         
         // .......2 식판 내의 음식 영역
@@ -46,7 +52,8 @@ void* Consumer1::consumer_doing(const Mat& frame, vector<pair<string, Rect> >& m
             matching_result.push_back({result[i],frgm_Rects[i]});
 
         }
-
+        // 스캔 완료 안내를 띄운다 
+        sound.play_sound("scan_end");
     
     }
 
