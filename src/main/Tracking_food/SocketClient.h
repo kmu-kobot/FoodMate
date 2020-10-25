@@ -1,3 +1,4 @@
+#pragma
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/socket.h>
@@ -15,7 +16,7 @@ const int MAXHOSTNAME = 200;
 const int MAXCONNECTION = 5;
 const int MAXRECV = 1024;
 
-class SocketClient {
+class SocketClient{
 public:
     SocketClient();
     virtual ~SocketClient();
@@ -27,6 +28,8 @@ public:
 
     // data transmission
     void sendImage(Mat img) const;
+    
+    void sendNumber(int number) const;
 
     std::vector<std::string> recv() const;
     bool is_valid();

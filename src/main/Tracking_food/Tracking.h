@@ -9,7 +9,7 @@ using namespace std;
 class Tracking {
 private:
 	Mat blur, skin_mask, foreground_mask, img_canny;
-	//Â÷¿µ»ó background ¼³Á¤(history = -1, threshold = 400, shadow = false) 
+	//ì°¨ì˜ìƒ background ì„¤ì •(history = -1, threshold = 400, shadow = false) 
 	Ptr<BackgroundSubtractor> bg_model = createBackgroundSubtractorMOG2(-1, 400, false);
 	vector<Vec4i> lines;
 	vector<Vec3f> circles;
@@ -18,15 +18,16 @@ private:
 public:
 
 
-	//Á£°¡¶ô ÁÂÇ¥ ¹İÈ¯ÇÏ´Â ÇÔ¼ö
+	//ì “ê°€ë½ ì¢Œí‘œ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜
 	Vec4i detect_chopstic(Mat img, int thr, int minLineLength, int maxLineGap);
 
-	//¼ù°¡¶ô ÁÂÇ¥ ¹İÈ¯ÇÏ´Â ÇÔ¼ö
+	//ìˆŸê°€ë½ ì¢Œí‘œ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜
 	Vec3f detect_spoon(Mat img, int minDistance, int thr);
 
-	//»ì»ö Áö¿ì´Â ÇÔ¼ö
+	//ì‚´ìƒ‰ ì§€ìš°ëŠ” í•¨ìˆ˜
 	Mat make_mask_image(Mat img);
 
-	//tracking point Á£°¡¶ôÀÇ ÁÂÇ¥ ¹İÈ¯ _______ ÀÌ°Í¸¸ »ç¿ë!!
+	//tracking point ì “ê°€ë½ì˜ ì¢Œí‘œ ë°˜í™˜ _______ ì´ê²ƒë§Œ ì‚¬ìš©!!
 	Point2i tracking_point(Mat frame);
 };
+
