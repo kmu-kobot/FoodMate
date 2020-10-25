@@ -34,11 +34,9 @@ void* Consumer1::consumer_doing(const Mat& frame) {
         }
 
         // .......3 소켓으로부터 답변을 전송 받는다.
-         vector<string> result;
-        while (1) {
-            result = client.recv(); // 값이 들어오길 기다린다.
-            if (result.size() != 0) break;
-        }
+         vector<string> result = client.recv(); // 값이 들어오길 기다린다.
+        //if (result.size() != 0) break;
+        
 
         //matching_result를 초기화 시키고 데이터를 담는다.
         matching_result.clear();
