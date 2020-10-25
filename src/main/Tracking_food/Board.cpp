@@ -15,13 +15,13 @@ Board::Board() {}
 
 Mat Board::img_preproces(Mat src)
 {
-    //ÀÌ¹ÌÁö ÀüÃ³¸® °úÁ¤
-    //ÀÌ¹ÌÁö Èæ¹éÀ¸·Î ÀüÈ¯ÈÄ ³ëÀÌÁî °¨¼Ò¸¦ À§ÇÑ ºí·¯Ã³¸®
+    //ì´ë¯¸ì§€ ì „ì²˜ë¦¬ ê³¼ì •
+    //ì´ë¯¸ì§€ í‘ë°±ìœ¼ë¡œ ì „í™˜í›„ ë…¸ì´ì¦ˆ ê°ì†Œë¥¼ ìœ„í•œ ë¸”ëŸ¬ì²˜ë¦¬
     Mat src_gray;
     cvtColor(src, src_gray, COLOR_BGR2GRAY);
     blur(src_gray, src_gray, Size(3, 3));
 
-    //cannyÇÔ¼ö¸¦ ÀÌ¿ëÇÏ¿© ÀÌ¹ÌÁöÀÇ À±°ûÃßÃâ
+    //cannyí•¨ìˆ˜ë¥¼ ì´ìš©í•˜ì—¬ ì´ë¯¸ì§€ì˜ ìœ¤ê³½ì¶”ì¶œ
     Mat canny_output;
     Canny(src_gray, canny_output, thresh, thresh * 2);
 
@@ -32,15 +32,15 @@ board_obj Board::get_target_area(Mat src)
 {
 
     board_obj my_board_obj;
-    //ÀÌ¹ÌÁö¿¡¼­ ½ÄÆÇÀÇ ¿µ¿ª¸¸À» ÃßÃâ
+    //ì´ë¯¸ì§€ì—ì„œ ì‹íŒì˜ ì˜ì—­ë§Œì„ ì¶”ì¶œ
     Mat img_pre = img_preproces(src);
 
-    //²÷¾îÁø À±°û¼±À» ÀÕ±â À§ÇØ canny edge¿¡¼­ ±¸ÇÑ pointµéÀ» È®Àå
+    //ëŠì–´ì§„ ìœ¤ê³½ì„ ì„ ì‡ê¸° ìœ„í•´ canny edgeì—ì„œ êµ¬í•œ pointë“¤ì„ í™•ì¥
     Mat mask = getStructuringElement(MORPH_RECT, Size(2, 2), Point(1, 1));
     Mat dilate_edge;
     dilate(img_pre, dilate_edge, mask, Point(-1, -1), 1);
 
-    //edge¸¦ È®ÀåÇÑ ÀÌ¹ÌÁö¿¡¼­ contour¸¦ Ã£À½
+    //edgeë¥¼ í™•ì¥í•œ ì´ë¯¸ì§€ì—ì„œ contourë¥¼ ì°¾ìŒ
     vector<vector<Point>> contours;
     findContours(dilate_edge, contours, RETR_TREE, CHAIN_APPROX_SIMPLE);
 
@@ -49,7 +49,7 @@ board_obj Board::get_target_area(Mat src)
 
     vector<Point> biggest_area = contours[0];
 
-    //ÀÌ¹ÌÁö¿¡¼­ °¡Àå Å« À±°û¼±À» Ã£À½
+    //ì´ë¯¸ì§€ì—ì„œ ê°€ì¥ í° ìœ¤ê³½ì„ ì„ ì°¾ìŒ
     for (size_t i = 0; i < contours.size(); i++)
     {
         approxPolyDP(contours[i], contours_poly[i], 20, true);
@@ -60,15 +60,15 @@ board_obj Board::get_target_area(Mat src)
         }
     }
 
-    //À§¿¡¼­ Ã£Àº °¡ÀåÅ« À±°û¼±À» »ç°¢ÇüÀ¸·Î ÀüÈ¯
+    //ìœ„ì—ì„œ ì°¾ì€ ê°€ì¥í° ìœ¤ê³½ì„ ì„ ì‚¬ê°í˜•ìœ¼ë¡œ ì „í™˜
     boundRect = boundingRect(biggest_area);
     rectangle(src, boundRect.tl(), boundRect.br(), (0, 0, 255), 2);
 
-    // ½ÄÆÇÀÇ Áß½ÉÀ» ±¸ÇÑ´Ù.
+    // ì‹íŒì˜ ì¤‘ì‹¬ì„ êµ¬í•œë‹¤.
     my_board_obj.board_center = Point((boundRect.x + boundRect.width) / 2, (boundRect.y + boundRect.height) / 2);
 
 
-    //»ç°¢ÇüÀ» °ü½É¿µ¿ªÀ¸·Î ÇÏ°í ÀÌ¹ÌÁö¸¦ crop
+    //ì‚¬ê°í˜•ì„ ê´€ì‹¬ì˜ì—­ìœ¼ë¡œ í•˜ê³  ì´ë¯¸ì§€ë¥¼ crop
     my_board_obj.board_img = src(boundRect);
     imshow("Contours", my_board_obj.board_img);
     waitKey();
@@ -80,9 +80,9 @@ frgm_obj Board::frgm_board(Mat src)
 {
 
     frgm_obj my_frgm_obj;
-    //ÀÌ¹ÌÁö ÀüÃ³¸®
+    //ì´ë¯¸ì§€ ì „ì²˜ë¦¬
     Mat img_pre = img_preproces(src);
-    //ÀÌ¹ÌÁö ¾È¿¡¼­ contours¸¦ Ã£À½
+    //ì´ë¯¸ì§€ ì•ˆì—ì„œ contoursë¥¼ ì°¾ìŒ
     vector<vector<Point>> contours;
     findContours(img_pre, contours, RETR_TREE, CHAIN_APPROX_SIMPLE);
 
@@ -92,7 +92,7 @@ frgm_obj Board::frgm_board(Mat src)
     vector<vector<Point>> contours_poly(contours.size());
     vector<Rect> boundRect;
 
-    //ÀÏÁ¤ Å©±â ÀÌÇÏÀÇ contour¸¦ Á¦°ÅÇÔ
+    //ì¼ì • í¬ê¸° ì´í•˜ì˜ contourë¥¼ ì œê±°í•¨
     for (size_t i = 0; i < contours.size(); i++)
     {
         approxPolyDP(contours[i], contours_poly[i], 20, true);
@@ -102,7 +102,7 @@ frgm_obj Board::frgm_board(Mat src)
             continue;
         }
         cout << contourArea(contours_poly[i]) << endl;
-        //ÇÊÅÍ¸µµÈ contours¸¦ »ç°¢ÇüÀ¸·Î º¯È¯ÇÔ
+        //í•„í„°ë§ëœ contoursë¥¼ ì‚¬ê°í˜•ìœ¼ë¡œ ë³€í™˜í•¨
         boundRect.push_back(boundingRect(contours_poly[i]));
     }
 
@@ -110,8 +110,8 @@ frgm_obj Board::frgm_board(Mat src)
 
 
 
-    //À§¿¡¼­ ±¸ÇÑ »ç°¢Çü ¿µ¿ªÀ» À½½ÄÀÇ ¿µ¿ªÀ¸·Î ÀÎ½ÄÇÏ°í
-    //°¢°¢ÀÇ ¿µ¿ª¸¸Å­ ÀÌ¹ÌÁö¸¦ cropÇÏ¿© ÀúÀå
+    //ìœ„ì—ì„œ êµ¬í•œ ì‚¬ê°í˜• ì˜ì—­ì„ ìŒì‹ì˜ ì˜ì—­ìœ¼ë¡œ ì¸ì‹í•˜ê³ 
+    //ê°ê°ì˜ ì˜ì—­ë§Œí¼ ì´ë¯¸ì§€ë¥¼ cropí•˜ì—¬ ì €ì¥
     for (size_t i = 0; i < boundRect.size(); i++)
     {
         drawContours(drawing, contours_poly, (int)i, (0, 0, 255));
