@@ -1,4 +1,6 @@
 #pragma
+#include "opencv2/opencv.hpp"
+
 
 struct board_obj {
     cv::Point board_center;
@@ -6,8 +8,8 @@ struct board_obj {
 };
 
 struct frgm_obj {
-    std::vector<cv::Mat> crop_imgs; // Àß¸° ÀÌ¹ÌÁö¸¦ ´ã´Â°÷
-    std::vector<cv::Rect> crop_Rects; // Àß¸° ÀÌ¹ÌÁöÀÇ À§Ä¡¸¦ ´ã´Â°÷ 
+    std::vector<cv::Mat> crop_imgs; // ì˜ë¦° ì´ë¯¸ì§€ë¥¼ ë‹´ëŠ”ê³³
+    std::vector<cv::Rect> crop_Rects; // ì˜ë¦° ì´ë¯¸ì§€ì˜ ìœ„ì¹˜ë¥¼ ë‹´ëŠ”ê³³ 
 };
 
 
@@ -21,10 +23,11 @@ public:
     Board();
 
 
-    Point pre_point = Point(0, 0);  // ½ÄÆÇÀÇ ÀÌÀü À§Ä¡ 
-    Point crnt_point; // ½ÄÆÇÀÇ ÇöÀç À§Ä¡ 
+    cv::Point pre_point = cv::Point(0, 0);  // ì‹íŒì˜ ì´ì „ ìœ„ì¹˜ 
+    cv::Point crnt_point; // ì‹íŒì˜ í˜„ì¬ ìœ„ì¹˜ 
 
     cv::Mat img_preproces(cv::Mat src);
     board_obj get_target_area(cv::Mat src);
     frgm_obj frgm_board(cv::Mat src);
 };
+
