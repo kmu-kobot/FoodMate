@@ -4,7 +4,7 @@
 
 class Board{
     private:
-        int thresh;
+        int thresh = 10;
 
     public:
         Board();
