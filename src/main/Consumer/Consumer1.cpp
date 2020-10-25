@@ -8,48 +8,50 @@
 
 using namespace cv;
 
-//.......... ÇÊ¿äÇÑ °´Ã¼µé »ı¼º
+//.......... í•„ìš”í•œ ê°ì²´ë“¤ ìƒì„±
 Board board = Board();  
 SocketClient client = SocketClient();
-vector<pair<String, Rect>> matching_result;  // ¿µ¿ª°ú ÀÌ¸§À» ¸ÅÄªÇÑ ÇÔ¼ö 
+vector<pair<String, Rect>> matching_result;  // ì˜ì—­ê³¼ ì´ë¦„ì„ ë§¤ì¹­í•œ í•¨ìˆ˜ 
 
 
 void* Consumer1::consumer_doing(const Mat& frame) {
     
-    // .......1 ½ÄÆÇÀÇ ¿µ¿ªÀ» ±¸ÇÑ´Ù.
-    // Áß½É check , ½ÄÆÇÀÇ À§Ä¡°¡ ÈÖ¾îÁö¸é 
-    board_obj b_o= board.get_target_area(frame);  //ÀÌ¹ÌÁö¿Í Áß½ÉÀÌ µé¾îÀÖ´Â ±¸Á¶Ã¼ ¹İÈ¯
-    board.crnt_point = b_o.board_center; // ½ÄÆÇÀÇ Áß½ÉÁÂÇ¥ update
+    // .......1 ì‹íŒì˜ ì˜ì—­ì„ êµ¬í•œë‹¤.
+    // ì¤‘ì‹¬ check , ì‹íŒì˜ ìœ„ì¹˜ê°€ íœ˜ì–´ì§€ë©´ 
+    board_obj b_o= board.get_target_area(frame);  //ì´ë¯¸ì§€ì™€ ì¤‘ì‹¬ì´ ë“¤ì–´ìˆëŠ” êµ¬ì¡°ì²´ ë°˜í™˜
+    board.crnt_point = b_o.board_center; // ì‹íŒì˜ ì¤‘ì‹¬ì¢Œí‘œ update
     if (abs(board.pre_point.x - board.crnt_point.x) > 25 || abs(board.pre_point.y - board.crnt_point.y) > 25) {
         Mat board_img = b_o.board_img;
         
-        // .......2 ½ÄÆÇ ³»ÀÇ À½½Ä ¿µ¿ª
-        frgm_obj f_o = board.frgm_board(board_img); // ÀÌ¹ÌÁö¿Í¿µ¿ªº¤ÅÍ°¡ µµÃâ
+        // .......2 ì‹íŒ ë‚´ì˜ ìŒì‹ ì˜ì—­
+        frgm_obj f_o = board.frgm_board(board_img); // ì´ë¯¸ì§€ì™€ì˜ì—­ë²¡í„°ê°€ ë„ì¶œ
         
         vector<Mat> frgm_imgs = f_o.crop_imgs;
         vector<Rect> frgm_Rects = f_o.crop_Rects;
 
-         for (int i = 0; i < frgm_imgs.size(); i++) { // ¼ÒÄÏÀ» ÅëÇØ ÀÌ¹ÌÁö¸¦ Àü¼ÛÇÑ´Ù.
+         for (int i = 0; i < frgm_imgs.size(); i++) { // ì†Œì¼“ì„ í†µí•´ ì´ë¯¸ì§€ë¥¼ ì „ì†¡í•œë‹¤.
             client.sendImage(frgm_imgs[i]);
         }
 
-        // .......3 ¼ÒÄÏÀ¸·ÎºÎÅÍ ´äº¯À» Àü¼Û ¹Ş´Â´Ù.
+        // .......3 ì†Œì¼“ìœ¼ë¡œë¶€í„° ë‹µë³€ì„ ì „ì†¡ ë°›ëŠ”ë‹¤.
          vector<string> result;
         while (1) {
-            result = client.recv(); // °ªÀÌ µé¾î¿À±æ ±â´Ù¸°´Ù.
+            result = client.recv(); // ê°’ì´ ë“¤ì–´ì˜¤ê¸¸ ê¸°ë‹¤ë¦°ë‹¤.
             if (result.size() != 0) break;
         }
 
-        //matching_result¸¦ ÃÊ±âÈ­ ½ÃÅ°°í µ¥ÀÌÅÍ¸¦ ´ã´Â´Ù.
+        //matching_resultë¥¼ ì´ˆê¸°í™” ì‹œí‚¤ê³  ë°ì´í„°ë¥¼ ë‹´ëŠ”ë‹¤.
         matching_result.clear();
-        for (int i = 0; i < frgm_Rects.size(); i++) { // ¼ÒÄÏÀ» ÅëÇØ ¹ŞÀº °á°ú¿Í ÀÌ¹ÌÁöÀÇ ÀÌ¸§À» ¸ÅÄª.
+        for (int i = 0; i < frgm_Rects.size(); i++) { // ì†Œì¼“ì„ í†µí•´ ë°›ì€ ê²°ê³¼ì™€ ì´ë¯¸ì§€ì˜ ì´ë¦„ì„ ë§¤ì¹­.
             matching_result.push_back({result[i],frgm_Rects[i]});
         }
 
     
     }
-    //########## ¹ŞÀº ÀÌ¹ÌÁö¸¦ ÀÌ¿ëÇÏ¿© #############
-    pre_point = board_obj.board_center; // ÇöÀçÀÇ ½ÄÆÇÀÇ Áß½ÉÁÂÇ¥·ê °ú°Å·Îupdate
+
+
+    // í˜„ì¬ì˜ ì‹íŒì˜ ì¤‘ì‹¬ì¢Œí‘œëŠ” ê³¼ê±°ê°€ ëœë‹¤.
+    board.pre_point = b_o.board_center; 
 
    
 
