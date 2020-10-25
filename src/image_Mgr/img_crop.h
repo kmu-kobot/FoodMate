@@ -1,21 +1,16 @@
-#ifndef IMG_CROP_H
-#define IMG_CROP_H
+#pragma
+
+
 
 class Board{
     private:
-
         int thresh;
 
-
-
     public:
-        Board(){}
+        Board();
 
-        Mat img_preproces(Mat src){return canny_output;}
-        
-        Mat get_target_area(Mat src){return crop_img;}
-
-        vector<Mat> thresh_callback(Mat src){return crop_img;}
+        cv::Mat img_preproces(cv::Mat src);
+        cv::Mat get_target_area(cv::Mat src);
+        std::vector<cv::Mat> thresh_callback(cv::Mat src);
 };
 
-#endif
