@@ -96,11 +96,9 @@ std::vector<std::string> SocketClient::recv() const
 	char buf[MAXRECV + 1];
 
 	std::vector<std::string> results;
-	char *ptr;
-
 	memset(buf, 0, MAXRECV + 1); // MAXRECV +1 만큼 0으로 채우고
  
-
+	char* ptr = strtok(buf,"\n\b\n\b");
 	int recv_length = ::recv(client_socket, buf, MAXRECV, 0);
 
 	if(recv_length == -1)
@@ -114,11 +112,11 @@ std::vector<std::string> SocketClient::recv() const
 	}
 	else
 	{
-		ptr = strtok(buf,"\n\b\n\b");
+		// char* ptr = strtok(buf,"\n\b\n\b");
 		while(ptr!=NULL){
 			std::string str;
 			str = ptr;
-			results.push_back(str(ptr));
+			results.push_back(str);
 			ptr = strtok(NULL," ");
 
 		}
