@@ -28,20 +28,7 @@ pthread_t producer_thread, consumer_thread1, consumer_thread2;
 // pthread_cond_t fill_queue; // conditional value
 
 // 2....공유 데이터
-
 queue<Mat> frameQueue;
-void put(Mat mat){
-    if( frameQueue.size()==MAXFRAME){
-        frameQueue.pop();
-    }
-    else frameQueue.push(mat);
-}
-Mat get(){
-    if(frameQueue.size()==0){
-
-    }
-}
-
 
 void* producer_run(void* arg);
 void* consumer_run1(void* arg);
