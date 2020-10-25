@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <opencv2/opencv.hpp>
 #include <vector>
+#include <string.h>
 
 using namespace cv;
 using namespace std;
@@ -54,7 +55,7 @@ bool SocketClient::is_valid(){
 // 	else
 // 		return true;
 // }
-void SocketClient::sendImage(Mat img) const
+void SocketClient::sendImage(Mat img) const // image send success but not
 {   
     // if(!img.data){
     //     cout<<"mat.data not found\n"<<endl;
@@ -72,6 +73,8 @@ void SocketClient::sendImage(Mat img) const
 
 	send(client_socket, message_length.c_str(), size_message_length_, 0);
 	send(client_socket, buf.data(), length, 0);
+	
+	
 	// send(client_socket, "\n\b\n\bsave", 9, 0);
 	// string s ="";
 	// const char *inputD = (const char*)(img.data);
@@ -88,11 +91,12 @@ void SocketClient::sendImage(Mat img) const
 
    
 
-int SocketClient::recv(string& s) const
+std::vector<std::string> SocketClient::recv() const
 {
 	char buf[MAXRECV + 1];
 
-	s = "";
+	std::vector<std::string> results;
+	char *ptr;
 
 	memset(buf, 0, MAXRECV + 1); // MAXRECV +1 만큼 0으로 채우고
  
@@ -102,21 +106,25 @@ int SocketClient::recv(string& s) const
 	if(recv_length == -1)
 	{
 		cout << "status == -1 errno == " << errno << " in SocketClient::recv\n";
-		return 0; 
+		// return 0; 
 	}
 	else if(recv_length== 0)
 	{
-		return 0;
+		// return 0;
 	}
 	else
 	{
-		s = buf; // 
-		return recv_length; // \n\b\n\b는 밖에서 분리하는건?
+		ptr = strtok(buf,"\n\b\n\b");
+		while(ptr!=NULL){
+			std::string str;
+			str = ptr;
+			results.push_back(str(ptr));
+			ptr = strtok(NULL," ");
+
+		}
+		return results; // stirng 벡터 리턴
 	}
 
-	//std::string recv_str;
-	// conn_sock.recv(recv_str);
-	// std::cout << "recved: " << recv_str << std::endl;
 }
 
 

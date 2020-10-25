@@ -28,7 +28,7 @@ public:
     // data transmission
     void sendImage(Mat img) const;
 
-    int recv(string &) const;
+    std::vector<std::string> recv() const;
     bool is_valid();
 
     void close_socket();
