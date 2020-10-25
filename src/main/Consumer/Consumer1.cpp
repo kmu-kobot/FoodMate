@@ -11,7 +11,7 @@ using namespace cv;
 //.......... 필요한 객체들 생성
 Board board = Board();  
 SocketClient client = SocketClient();
-vector<pair<String, Rect>> matching_result;  // 영역과 이름을 매칭한 함수 
+vector<pair<string, Rect>> matching_result;  // 영역과 이름을 매칭한 함수 
 
 
 void* Consumer1::consumer_doing(const Mat& frame) {
@@ -20,6 +20,8 @@ void* Consumer1::consumer_doing(const Mat& frame) {
     // 중심 check , 식판의 위치가 휘어지면 
     board_obj b_o= board.get_target_area(frame);  //이미지와 중심이 들어있는 구조체 반환
     board.crnt_point = b_o.board_center; // 식판의 중심좌표 update
+
+    // 일정 수준이상 식판이 움직이면 아래의 과정을 수행한다.
     if (abs(board.pre_point.x - board.crnt_point.x) > 25 || abs(board.pre_point.y - board.crnt_point.y) > 25) {
         Mat board_img = b_o.board_img;
         
