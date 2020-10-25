@@ -1,12 +1,10 @@
 #include "Tracking.h"
 
-using namespace cv;
-using namespace std;
 
 
 
 
-//Á£°¡¶ô ÁÂÇ¥ ¹İÈ¯ÇÏ´Â ÇÔ¼ö
+//ì “ê°€ë½ ì¢Œí‘œ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜
 Vec4i Tracking::detect_chopstic(Mat img, int thr, int minLineLength, int maxLineGap)
 {
 	lines.clear();
@@ -19,7 +17,7 @@ Vec4i Tracking::detect_chopstic(Mat img, int thr, int minLineLength, int maxLine
 }
 
 
-//¼ù°¡¶ô ÁÂÇ¥ ¹İÈ¯ÇÏ´Â ÇÔ¼ö
+//ìˆŸê°€ë½ ì¢Œí‘œ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜
 Vec3f Tracking::detect_spoon(Mat img, int minDistance, int thr)
 {
 	circles.clear();
@@ -33,7 +31,7 @@ Vec3f Tracking::detect_spoon(Mat img, int minDistance, int thr)
 }
 
 
-//»ì»ö Áö¿ì´Â ÇÔ¼ö
+//ì‚´ìƒ‰ ì§€ìš°ëŠ” í•¨ìˆ˜
 Mat Tracking::make_mask_image(Mat img)
 {
 	cvtColor(img, img_YCrCb, COLOR_BGR2YCrCb);
@@ -43,45 +41,45 @@ Mat Tracking::make_mask_image(Mat img)
 }
 
 
-//tracking point Á£°¡¶ôÀÇ ÁÂÇ¥ ¹İÈ¯
-Point2i Tracking::tracking_point(Mat frame)
+//tracking point ì “ê°€ë½ì˜ ì¢Œí‘œ ë°˜í™˜
+Point Tracking::tracking_point(Mat frame)
 {
 	if (frame.empty())
 	{
 		cout << "Could not open camera :(" << endl;
 	}
 
-	//frame ¿µ»ó ÀüÃ³¸®(640x480, ÁÂ¿ì¹İÀü, 3x3 °¡¿ì½Ã¾È ºí·¯)
+	//frame ì˜ìƒ ì „ì²˜ë¦¬(640x480, ì¢Œìš°ë°˜ì „, 3x3 ê°€ìš°ì‹œì•ˆ ë¸”ëŸ¬)
 	resize(frame, frame, Size(640, 480));
 	flip(frame, frame, 1);
 	GaussianBlur(frame, blur, Size(5, 5), 0);
 
-	//ÃÊ±â Â÷¿µ»ó ¸¶½ºÅ© Mat »ı¼º
+	//ì´ˆê¸° ì°¨ì˜ìƒ ë§ˆìŠ¤í¬ Mat ìƒì„±
 	if (foreground_mask.empty())
 	{
 		foreground_mask.create(frame.size(), frame.type());
 	}
 
-	// 1.Â÷¿µ»ó ¸¶½ºÅ© ¾º¿ì°í ³ëÀÌÁî Á¦°Å(9x9 ¹Ìµğ¾ğ ÇÊÅÍ)
+	// 1.ì°¨ì˜ìƒ ë§ˆìŠ¤í¬ ì”Œìš°ê³  ë…¸ì´ì¦ˆ ì œê±°(9x9 ë¯¸ë””ì–¸ í•„í„°)
 	bg_model->apply(blur, foreground_mask);
 	Mat kernel = getStructuringElement(MORPH_RECT, Size(9, 9), Point(-1, -1));
 	morphologyEx(foreground_mask, foreground_mask, MORPH_CLOSE, kernel);
 	medianBlur(foreground_mask, foreground_mask, 5);
 
-	// 2.Â÷¿µ»ó¿¡¼­ »ì»öÁ¦°Å ÈÄ skin_mask¿¡ ÀúÀå
+	// 2.ì°¨ì˜ìƒì—ì„œ ì‚´ìƒ‰ì œê±° í›„ skin_maskì— ì €ì¥
 	copyTo(frame, skin_mask, foreground_mask);
 	skin_mask = make_mask_image(frame);
 
-	// 3.½Ä±â¸¸ ³²Àº ¿µ»ó ÀÌÁøÈ­
+	// 3.ì‹ê¸°ë§Œ ë‚¨ì€ ì˜ìƒ ì´ì§„í™”
 	bitwise_and(skin_mask, foreground_mask, foreground_mask);
 
-	// 4.ÀÌÁøÈ­ ¿µ»ó¿¡ Canny Àû¿ë
+	// 4.ì´ì§„í™” ì˜ìƒì— Canny ì ìš©
 	Canny(foreground_mask, img_canny, 50, 150);
-	//µğ¹ö±ë¿ë
+	//ë””ë²„ê¹…ìš©
 	imshow("canny_img", img_canny);
 
-	// 5.¼ù°¡¶ôÀ» Ã£À¸¸é ¹Ù·Î ¹İÈ¯ÇÏ°í, ¼ù°¡¶ôÀÌ ¾øÀ¸¸é Á£°¡¶ô ÁÂÇ¥ ¹İÈ¯
-	//¼ù°¡¶ô Æ÷ÀÎÆ®
+	// 5.ìˆŸê°€ë½ì„ ì°¾ìœ¼ë©´ ë°”ë¡œ ë°˜í™˜í•˜ê³ , ìˆŸê°€ë½ì´ ì—†ìœ¼ë©´ ì “ê°€ë½ ì¢Œí‘œ ë°˜í™˜
+	//ìˆŸê°€ë½ í¬ì¸íŠ¸
 	Vec3f s = NULL;
 	s = detect_spoon(img_canny, 10, 50);
 	if (s[0] > 0 && s[1] > 0 && s[2] > 0)
@@ -91,13 +89,13 @@ Point2i Tracking::tracking_point(Mat frame)
 		return Point(s[0], s[1]);
 	}
 
-	//Á£°¡¶ô Æ÷ÀÎÆ®
+	//ì “ê°€ë½ í¬ì¸íŠ¸
 	Vec4i c = NULL;
 	c = detect_chopstic(img_canny, 70, 15, 100);
 	if (c[0] > 0 && c[1] > 0 && c[2] > 0 && c[3] > 0)
 	{
 		line(frame, Point(c[0], c[1]), Point(c[2], c[3]), Scalar(0, 255, 0), 2, 10);
-		//¿µ»ó¿¡¼­ ´õ À§¿¡ÀÖ´Â Æ÷ÀÎÆ® ¹İÈ¯
+		//ì˜ìƒì—ì„œ ë” ìœ„ì—ìˆëŠ” í¬ì¸íŠ¸ ë°˜í™˜
 		return Point(c[1] > c[3] ? c[2] : c[0], c[1] > c[3] ? c[3] : c[1]);
 		//circle(frame, Point(x, y), 5, Scalar(255, 0, 0), -1);
 	}
@@ -109,7 +107,7 @@ Point2i Tracking::tracking_point(Mat frame)
 int main()
 {
 	Mat frame;
-	Point2i x, y;
+	Point x, y;
 	VideoCapture cap;
 	Tracking t = Tracking();
 	cap.open(0);
@@ -119,7 +117,7 @@ int main()
 	{
 		cap.read(frame);
 		flip(frame, frame, 1);
-		x, y = t.tracking_point(frame);
+		(x, y) = t.tracking_point(frame);
 		circle(frame, (x, y), 5, Scalar(255, 0, 0), -1);
 		imshow("frame", frame);
 		if (waitKey(5) >= 0)
