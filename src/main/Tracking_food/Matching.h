@@ -9,3 +9,4 @@ public:
     Matching();
     string match_food(Point pt, vector<pair<string, Rect>> matching_result);
 };
+
