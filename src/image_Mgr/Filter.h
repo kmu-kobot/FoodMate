@@ -1,7 +1,4 @@
 #pragma
-
-
-
 class Filter{
     private:
         int thresh = 10;
