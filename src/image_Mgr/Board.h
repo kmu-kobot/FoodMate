@@ -14,7 +14,7 @@ struct frgm_obj{
 
 class Board{
     private:
-        int thresh = 10;
+        int thresh = 25;
 
 
     public:
@@ -24,5 +24,6 @@ class Board{
         cv::Mat img_preproces(cv::Mat src);
         board_obj get_target_area(cv::Mat src);
         frgm_obj frgm_board(cv::Mat src);
+        float rectArea(cv::Rect rect);
 };
 
