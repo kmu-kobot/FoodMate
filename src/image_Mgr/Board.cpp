@@ -13,17 +13,26 @@ using namespace std;
 Board::Board() {}
 
 
+float Board::rectArea(Rect rect){
+    float area;
+    //사각형 영역의 넓이를 구함
+    area = rect.width * rect.height;
+    return area;
+}
+
 Mat Board::img_preproces(Mat src)
 {
     //이미지 전처리 과정
     //이미지 흑백으로 전환후 노이즈 감소를 위한 블러처리
+
     Mat src_gray;
     cvtColor(src, src_gray, COLOR_BGR2GRAY);
-    blur(src_gray, src_gray, Size(3, 3));
+    blur(src_gray, src_gray, Size(2, 2));
 
     //canny함수를 이용하여 이미지의 윤곽추출
     Mat canny_output;
     Canny(src_gray, canny_output, thresh, thresh * 2);
+    
 
     return canny_output;
 }
@@ -31,14 +40,21 @@ Mat Board::img_preproces(Mat src)
 board_obj Board::get_target_area(Mat src)
 {
 
+    imshow("Contours", src);
+    waitKey();
+
     board_obj my_board_obj;
     //이미지에서 식판의 영역만을 추출
     Mat img_pre = img_preproces(src);
 
     //끊어진 윤곽선을 잇기 위해 canny edge에서 구한 point들을 확장
-    Mat mask = getStructuringElement(MORPH_RECT, Size(2, 2), Point(1, 1));
+    Mat mask = getStructuringElement(MORPH_RECT, Size(5, 5), Point(1, 1));
     Mat dilate_edge;
-    dilate(img_pre, dilate_edge, mask, Point(-1, -1), 1);
+    dilate(img_pre, dilate_edge, mask, Point(-1, -1), 4);
+
+    imshow("Contours", dilate_edge);
+    waitKey();
+
 
     //edge를 확장한 이미지에서 contour를 찾음
     vector<vector<Point>> contours;
@@ -78,33 +94,46 @@ board_obj Board::get_target_area(Mat src)
 
 frgm_obj Board::frgm_board(Mat src)
 {
-
+    //사진의 넓이를 구함
+    int target_area = src.size().width * src.size().height;
+    
     frgm_obj my_frgm_obj;
     //이미지 전처리
     Mat img_pre = img_preproces(src);
 
+    Mat mask = getStructuringElement(MORPH_RECT, Size(2, 2), Point(1, 1));
+    Mat dilate_edge;
+    dilate(img_pre, dilate_edge, mask, Point(-1, -1), 2);
 
     //이미지 안에서 contours를 찾음
     vector<vector<Point>> contours;
-    findContours(img_pre, contours, RETR_TREE, CHAIN_APPROX_SIMPLE);
+    findContours(dilate_edge, contours, RETR_TREE, CHAIN_APPROX_SIMPLE);
 
-    imshow("Contours", img_pre);
+    imshow("Contours", dilate_edge);
     waitKey();
 
+    
     vector<vector<Point>> contours_poly(contours.size());
     vector<Rect> boundRect;
-
+    Rect temp_rect;
+    float temp_area;
     //일정 크기 이하의 contour를 제거함
     for (size_t i = 0; i < contours.size(); i++)
     {
-        approxPolyDP(contours[i], contours_poly[i], 20, true);
-
-        if (contourArea(contours_poly[i]) < 600 || contourArea(contours_poly[i]) > 2000)
+        approxPolyDP(contours[i], contours_poly[i], 5, true);
+        //필터링된 contours를 사각형으로 변환함
+        temp_rect = boundingRect(contours_poly[i]);
+        
+        //전제 영역의 비율에서 너무 작거나 크면 제외
+        if (rectArea(temp_rect)/target_area * 100  < 4 || rectArea(temp_rect)/target_area * 100  > 15)
         {
             continue;
         }
+
+        cout<<temp_area/target_area<<endl;
         cout << contourArea(contours_poly[i]) << endl;
-        //필터링된 contours를 사각형으로 변환함
+        
+        //적절한 크기의 영역을 저장
         boundRect.push_back(boundingRect(contours_poly[i]));
     }
 
@@ -127,3 +156,13 @@ frgm_obj Board::frgm_board(Mat src)
 
     return my_frgm_obj;
 }
+
+    // int main(){
+    // Mat src = imread("image2.jpg");
+    // resize(src,src,Size(600, 400));
+    // Board b = Board();
+    // frgm_obj my_frgm_obj;
+    // board_obj my_board_obj;
+    // my_board_obj = b.get_target_area(src);
+    // my_frgm_obj =b.frgm_board(my_board_obj.crop_imgs);
+    // }
