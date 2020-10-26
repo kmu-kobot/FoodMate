@@ -16,7 +16,7 @@ using namespace std;
 //Sound sound = Sound();
 Consumer1::Consumer1(){
     client.create();
-    client.connect("127.0.0.1", 10000);
+    client.connect("127.0.0.1", 1102);
 }
 Consumer1::~Consumer1(){}
 void* Consumer1::consumer_doing(const Mat& frame, vector<pair<string, Rect> >& matching_result) {
@@ -40,21 +40,27 @@ void* Consumer1::consumer_doing(const Mat& frame, vector<pair<string, Rect> >& m
         vector<Mat> frgm_imgs = f_o.crop_imgs;
         vector<Rect> frgm_Rects = f_o.crop_Rects;
         
+
+        cout << frgm_imgs.size() <<endl;
         client.sendNumber(f_o.crop_imgs.size());
          for (int i = 0; i < frgm_imgs.size(); i++) { // 소켓을 통해 이미지를 전송한다.
+            cout << "전송" << endl;
             client.sendImage(frgm_imgs[i]);
         }
 
         // .......3 소켓으로부터 답변을 전송 받는다.
          vector<string> result = client.recv(); // 값이 들어오길 기다린다.
         //if (result.size() != 0) break;
-        
+          cout << "서버로부터 답변이 왔습니다"<<result.size() <<endl;
+          
 
+        if (result.size()!=0){
         //matching_result를 초기화 시키고 데이터를 담는다.
-        matching_result.clear();
-        for (int i = 0; i < frgm_Rects.size(); i++) { // 소켓을 통해 받은 결과와 이미지의 이름을 매칭.
-            matching_result.push_back({result[i],frgm_Rects[i]});
+          matching_result.clear();
+          for (int i = 0; i < frgm_Rects.size(); i++) { // 소켓을 통해 받은 결과와 이미지의 이름을 매칭.
+              matching_result.push_back({result[i],frgm_Rects[i]});
 
+          }
         }
         // 스캔 완료 안내를 띄운다 
       //--  sound.play_sound("scan_end");

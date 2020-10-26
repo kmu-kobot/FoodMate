@@ -15,7 +15,7 @@ Sound sound = Sound(); // 음성 안내
 
 
 void* Consumer2::consumer_doing(const Mat& frame, vector<pair<string, Rect> >& result) {
-
+    cout<< "consumer2" <<endl;
 
     //############# 받은 이미지를 이용하여 ###################
 
