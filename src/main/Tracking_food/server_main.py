@@ -19,7 +19,7 @@ class Main:
 
         # .......... 1. Server  TCP 소켓 열고 수신 대기
         TCP_IP = 'localhost'
-        TCP_PORT = 10000
+        TCP_PORT = 10001
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind((TCP_IP, TCP_PORT))
         self.server.listen(1)

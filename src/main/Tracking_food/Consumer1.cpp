@@ -16,7 +16,7 @@ using namespace std;
 //Sound sound = Sound();
 Consumer1::Consumer1(){
     client.create();
-    client.connect("127.0.0.1", 10000);
+    client.connect("127.0.0.1", 10001);
 }
 Consumer1::~Consumer1(){}
 void* Consumer1::consumer_doing(const Mat& frame, vector<pair<string, Rect> >& matching_result) {
