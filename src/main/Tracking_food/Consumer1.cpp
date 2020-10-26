@@ -1,22 +1,26 @@
-#include "Board.h"
-#include "Sound.h"
-#include "SocketClient.h"
 #include "Consumer1.h"
+
 #include <math.h>
 #include <utility>
 #include <opencv2/opencv.hpp>
 
 
 using namespace cv;
-
+using namespace std;
 //.......... 필요한 객체들 생성
-Board board = Board();  
-SocketClient client = SocketClient();
-Sound sound = Sound();
-
+ 
+//SocketClient client = SocketClient();
+//client.create();
+//client.connect("127.0.0.1", 10000);
+//Board board = Board(); 
+//Sound sound = Sound();
+Consumer1::Consumer1(){
+    client.create();
+    client.connect("127.0.0.1", 10000);
+}
+Consumer1::~Consumer1(){}
 void* Consumer1::consumer_doing(const Mat& frame, vector<pair<string, Rect> >& matching_result) {
-    
-
+     cout << "!!!!!!! consumer1  !!!!!!"<<endl;
     // .......1 식판의 영역을 구한다.
     // 중심 check , 식판의 위치가 휘어지면 
     board_obj b_o= board.get_target_area(frame);  //이미지와 중심이 들어있는 구조체 반환
@@ -25,7 +29,7 @@ void* Consumer1::consumer_doing(const Mat& frame, vector<pair<string, Rect> >& m
     // 일정 수준이상 식판이 움직이면 아래의 과정을 수행한다.
     if (abs(board.pre_point.x - board.crnt_point.x) > 25 || abs(board.pre_point.y - board.crnt_point.y) > 25) {
         // 스캔 시작 안내를 띄운다 
-        sound.play_sound("scan_start");
+       //-- sound.play_sound("scan_start");
         
         
         Mat board_img = b_o.board_img;
@@ -53,7 +57,7 @@ void* Consumer1::consumer_doing(const Mat& frame, vector<pair<string, Rect> >& m
 
         }
         // 스캔 완료 안내를 띄운다 
-        sound.play_sound("scan_end");
+      //--  sound.play_sound("scan_end");
     
     }
 
