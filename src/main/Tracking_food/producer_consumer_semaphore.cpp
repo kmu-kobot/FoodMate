@@ -11,8 +11,6 @@
 #include "Consumer1.h"
 #include "Consumer2.h"
 
-
-
 using namespace cv;
 using namespace std;
 #define MAXFRAME 60
@@ -20,7 +18,6 @@ using namespace std;
 sem_t empty;
 sem_t full;
 sem_t mutex1;
-
 
 // 0....
 VideoCapture vcap;
@@ -149,5 +146,3 @@ void *consumer_run2(void* arg) {
         // pthread_mutex_unlock(&frameLocker);
     }
 }
-
-
