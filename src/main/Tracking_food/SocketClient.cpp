@@ -79,18 +79,14 @@ void SocketClient::sendImage(Mat img) const // image send success but not
 
 void SocketClient::sendNumber(int number) const
 {
-	string ss = to_string(number);
-	string mark = "\n\b\n\b";
-	ss = ss + mark;
-	
-	char ch[20]; 
-	strcpy(ch, ss.c_str());
+	char s[10]; 
+	sprintf(s,"%d", number);
+	send(client_socket, s, 10, 0);
 
-	// sprintf(s,"%d", number);
+	// string s = to_string(number);
+	// s +="\n\b\n\bnumber";
+	// send(client_socket, s.c_str(), s.length(),0);
 
-	cout<<"1"<<endl;
-	send(client_socket, ch, 20, 0);
-	cout<<"2"<<endl;
 }
    
 
