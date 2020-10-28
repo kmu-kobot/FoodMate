@@ -79,14 +79,16 @@ void SocketClient::sendImage(Mat img) const // image send success but not
 
 void SocketClient::sendNumber(int number) const
 {
-	char s[10]; 
-	sprintf(s,"%d", number);
-	send(client_socket, s, 10, 0);
+	string ss = to_string(number);
+	string mark = "\n\b\n\b";
+	ss = ss + mark;
+	
+	char ch[16]; 
+	strcpy(ch, ss.c_str());
 
-	// string s = to_string(number);
-	// s +="\n\b\n\bnumber";
-	// send(client_socket, s.c_str(), s.length(),0);
+	// sprintf(s,"%d", number);
 
+	send(client_socket, ch, 16, 0);
 }
    
 
@@ -97,12 +99,12 @@ std::vector<std::string> SocketClient::recv() const
 	std::vector<std::string> results;
 	memset(buf, 0, MAXRECV + 1); // MAXRECV +1 만큼 0으로 채우고
  
-	char* ptr = strtok(buf,"\n\b\n\b");
+	
 	int recv_length = ::recv(client_socket, buf, MAXRECV, 0);
-
+	char* ptr = strtok(buf,"\n\b\n\b");
 	if(recv_length == -1)
 	{
-		cout << "status == -1 errno == " << errno << " in SocketClient::recv\n";
+		cout << "status == -1 errno == " << errno << "l in SocketClient::recv\n";
 		// return 0; 
 	}
 	else if(recv_length== 0)
@@ -116,8 +118,7 @@ std::vector<std::string> SocketClient::recv() const
 			std::string str;
 			str = ptr;
 			results.push_back(str);
-			ptr = strtok(NULL," ");
-
+			ptr = strtok(NULL,"\n\b\n\b");
 		}
 		return results; // stirng 벡터 리턴
 	}
