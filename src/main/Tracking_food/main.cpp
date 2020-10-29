@@ -8,10 +8,17 @@
 #include <semaphore.h>
 #include "ThDetectRecognizer.h"
 #include "ThTracker.h"
+#include <JetsonGPIO>           //https://github.com/pjueon/JetsonGPIO
 
 using namespace cv;
 using namespace std;
+using namespace GPIO;
 #define MAXFRAME 60
+#define BOTTON 33
+
+GPIO::setmode(GPIO::BOARD);
+GPIO::setup(BOTTON, GPIO::IN);
+GPIO::cleanup();
 
 sem_t empty;
 sem_t full;
@@ -44,10 +51,12 @@ int main(int, char**) {
     sem_init(&mutex1, 0, 1);
 
     // pthread_mutex_init(&frameLocker, NULL);
-    pthread_create(&producer_thread, NULL, producer_run, NULL);
-    pthread_create(&consumer_thread1, NULL, consumer_run1, NULL);
-    pthread_create(&consumer_thread2, NULL, consumer_run2, NULL);
-
+    if(GPIO::input(BOTTON) ==  GPIO::HIGH){
+        pthread_create(&producer_thread, NULL, producer_run, NULL);
+        pthread_create(&consumer_thread1, NULL, consumer_run1, NULL);
+        pthread_create(&consumer_thread2, NULL, consumer_run2, NULL);
+    }
+    
     pthread_join(producer_thread, NULL);
     pthread_join(consumer_thread1, NULL);
     pthread_join(consumer_thread2, NULL);
