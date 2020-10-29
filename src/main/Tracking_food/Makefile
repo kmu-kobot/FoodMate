@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -std=c++11
-SRCS = Tracking.cpp Matching.cpp Sound.cpp SocketClient.cpp Board.cpp Consumer1.cpp Consumer2.cpp producer_consumer_semaphore.cpp  
+SRCS = Tracker.cpp Matcher.cpp Sound.cpp SocketClient.cpp Board.cpp ThDetectRecognizer.cpp ThTracker.cpp main.cpp  
 PROG = ResultFile
 LDFLAGS =-lpthread
 
