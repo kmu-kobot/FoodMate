@@ -12,7 +12,7 @@ find_package(OpenCV REQUIRED)
 
 set(SOURCE_FILES Board.cpp Sound.cpp Matcher.cpp Tracker.cpp SocketClient.cpp ThDetectRecognizer.cpp ThTracker.cpp main.cpp)
 set(EXT_LIBS opencv_core opencv_imgcodecs opencv_highgui opencv_imgproc opencv_calib3d opencv_features2d)
-set(CMAKE_PREFIX PATH /home/opensw_project/traking_food/main/Tracking_food)
+set(CMAKE_PREFIX PATH /home/opensw_project/tracking_food/main/Tracking_food)
 
 message("set vars: ${CMAKE_BUILD_TYPE}, ${SOURCE_FIELS}")
 
