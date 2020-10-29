@@ -24,7 +24,7 @@ void* ThDetectRecognizer::do_ThDetectRecognizer(const Mat& frame, vector<pair<st
 
     // 일정 수준이상 식판이 움직이면 아래의 과정을 수행한다.
     // if (abs(board.pre_point.x - board.crnt_point.x) > 250 || abs(board.pre_point.y - board.crnt_point.y) > 25) {
-    if(matched_result.size() == 0){
+  //  if(matched_result.size() == 0){
         // 스캔 시작 안내를 띄운다 
        //-- _sound.play_sound("scan_start");
 
@@ -57,7 +57,7 @@ void* ThDetectRecognizer::do_ThDetectRecognizer(const Mat& frame, vector<pair<st
         }
         // 스캔 완료 안내를 띄운다 
       //--  _sound.play_sound("scan_end");
-    }
+   // }
 
 
     // 현재의 식판의 중심좌표는 과거가 된다.

@@ -30,6 +30,8 @@ ThDetectRecognizer _ThDetectRecognizer = ThDetectRecognizer();
 queue<Mat> frameQueue;
 vector<pair<string, Rect> > matched_result;
 Mat currentFrame;
+int push_bnt_cnt = 0; // 버튼을 누른 횟수
+
 //
 void* producer_run(void* arg);
 void* consumer_run1(void* arg);
@@ -59,14 +61,14 @@ void* producer_run(void* arg) {
         while (frameQueue.size() == MAXFRAME) {
             frameQueue.pop();
         }
-        sem_wait(&empty);
+        sem_wait(&empty); 
         sem_wait(&mutex1);
         Mat frame;
         if (frameQueue.size() == MAXFRAME) frameQueue.pop();
         vcap >> frame;
-	
+
         frameQueue.push(frame.clone());
-	    currentFrame = frameQueue.front();
+        currentFrame = frameQueue.front();
         sem_post(&mutex1);
         sem_post(&full);
     }
@@ -82,8 +84,9 @@ void* consumer_run1(void* arg) {
         sem_wait(&mutex1);
 
         // Mat currentFrame = frameQueue.front();
-        _ThDetectRecognizer.do_ThDetectRecognizer(currentFrame, matched_result);
-
+        if (push_bnt_cnt % 5 == 0) { // 식판 인식 버튼 5회눌렀을 경우
+            _ThDetectRecognizer.do_ThDetectRecognizer(currentFrame, matched_result);
+        }
         // 이미지 식판 - > 반찬 영역 구함 -> socket
         frameQueue.pop();
         sem_post(&mutex1);
@@ -98,14 +101,14 @@ void* consumer_run2(void* arg) {
         }
         sem_wait(&full);
         sem_wait(&mutex1);
-     
+
         // Mat currentFrame = frameQueue.front();
 
         if (matched_result.size() != 0) {
-            _ThTracker.do_ThTracker(currentFrame, matched_result);
+            _ThTracker.do_ThTracker(currentFrame, matched_result, push_bnt_cnt);
         }
         frameQueue.pop();
         sem_post(&mutex1);
-        sem_post(&empty);     
+        sem_post(&empty);
     }
 }

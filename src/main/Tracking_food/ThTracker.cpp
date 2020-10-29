@@ -9,7 +9,7 @@ using namespace std;
 
 
 
-void* ThTracker::do_ThTracker(const Mat& frame, vector<pair<string, Rect> >& result) {
+void* ThTracker::do_ThTracker(const Mat& frame, vector<pair<string, Rect> >& result, int push_btn_cnt) {
 
     //############# 받은 이미지를 이용하여 ###################
     // .......1. 젓가락 포인터를 좌표를 구한다.
@@ -19,7 +19,15 @@ void* ThTracker::do_ThTracker(const Mat& frame, vector<pair<string, Rect> >& res
     string  answer = _Matcher.match_food(center, result);
 
     // .......3. 나온 결과를 음성으로 안내한다.
+    if (true) {
+        push_btn_cnt += 1;
+        //Sound.play_sound(answer);
+        //cout << "결과: " << answer << endl;
+    }
+
     _Sound.play_sound(answer);
     cout << "결과: " << answer << endl;
+
+
 
 }
