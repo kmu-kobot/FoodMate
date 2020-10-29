@@ -9,60 +9,40 @@
 using namespace cv;
 using namespace std;
 
-SocketClient::SocketClient():client_socket(-1)
+SocketClient::SocketClient():_client_socket(-1)
 {
-    memset(&server_addr, 0, sizeof(server_addr));
+    memset(&_server_addr, 0, sizeof(_server_addr));
 }
 
 SocketClient::~SocketClient(){
     if  (is_valid()){
-        ::close(client_socket);
+        ::close(_client_socket);
     }
 }
 bool SocketClient::create()
 {
-	client_socket = socket(PF_INET, SOCK_STREAM, 0);
+	_client_socket = socket(PF_INET, SOCK_STREAM, 0);
 
 	if(!is_valid())
 		return false;
 
 	int on = 1;
-	if (setsockopt(client_socket, SOL_SOCKET, SO_REUSEADDR, (const char*)&on, sizeof(on)))
+	if (setsockopt(_client_socket, SOL_SOCKET, SO_REUSEADDR, (const char*)&on, sizeof(on)))
 		return false;
 
 	return true;
 }
 
 bool SocketClient::is_valid(){
-    return client_socket !=-1;
+    return _client_socket !=-1;
 }
 
-// bool SocketClient::send(Mat &mat, const string mark) const
-// {   
-//     if(!mat.data){
-//         cout<<"mat.data not found\n"<<endl;
-//         return -1;
-// 	}
-
-//     mat = mat.reshape(0,1);
-//     int imgSize = mat.total()*mat.elemSize();
-
-// 	string matAsString(mat.datastart, mat.dataend);
-// 	//mark-> '\n\b\n\bsave'or '\n\b\n\bend' or '\n\b\n\b'
-// 	int status = ::send(client_socket, (matAsString+mark).c_str(), imgSize, 0); // send
-// 	// int status = ::send(client_socket, img.data, imgSize, 0); // send
-
-// 	if(status == -1) return false;
-// 	else
-// 		return true;
-// }
 void SocketClient::sendImage(Mat img) const // image send success but not
 {   
     // if(!img.data){
     //     cout<<"mat.data not found\n"<<endl;
     //     return -1;
 	// }
-
 
 	int pixel_number = img.rows * img.cols / 2;
 	vector<uchar> buf(pixel_number);
@@ -71,26 +51,23 @@ void SocketClient::sendImage(Mat img) const // image send success but not
 	int length = buf.size();
 	string length_str = to_string(length);
 	string message_length =
-	 	string(size_message_length_ - length_str.length(), '0') + length_str;
+	 	string(_size_message_length_ - length_str.length(), '0') + length_str;
 
-	send(client_socket, message_length.c_str(), size_message_length_, 0);
-	send(client_socket, buf.data(), length, 0);
+	send(_client_socket, message_length.c_str(), _size_message_length_, 0);
+	send(_client_socket, buf.data(), length, 0);
 }
 
 void SocketClient::sendNumber(int number) const
 {
-	string ss = to_string(number);
+	string tmp_string = to_string(number);
 	string mark = "\n\b\n\b";
-	ss = ss + mark;
+	tmp_string = tmp_string + mark;
 	
 	char ch[16]; 
-	strcpy(ch, ss.c_str());
+	strcpy(ch, tmp_string.c_str());
 
-	// sprintf(s,"%d", number);
-
-	send(client_socket, ch, 16, 0);
+	send(_client_socket, ch, 16, 0);
 }
-   
 
 std::vector<std::string> SocketClient::recv() const
 {
@@ -98,9 +75,8 @@ std::vector<std::string> SocketClient::recv() const
 
 	std::vector<std::string> results;
 	memset(buf, 0, MAXRECV + 1); // MAXRECV +1 만큼 0으로 채우고
- 
-	
-	int recv_length = ::recv(client_socket, buf, MAXRECV, 0);
+ 	
+	int recv_length = ::recv(_client_socket, buf, MAXRECV, 0);
 	char* ptr = strtok(buf,"\n\b\n\b");
 	if(recv_length == -1)
 	{
@@ -113,7 +89,6 @@ std::vector<std::string> SocketClient::recv() const
 	}
 	else
 	{
-		// char* ptr = strtok(buf,"\n\b\n\b");
 		while(ptr!=NULL){
 			std::string str;
 			str = ptr;
@@ -122,24 +97,22 @@ std::vector<std::string> SocketClient::recv() const
 		}
 		return results; // stirng 벡터 리턴
 	}
-
 }
-
 
 bool SocketClient::connect(const std::string host, const int port)
 {
 	if(!is_valid()){
         return false;
     }
-	server_addr.sin_family = AF_INET;
-	server_addr.sin_port = htons(port);
+	_server_addr.sin_family = AF_INET;
+	_server_addr.sin_port = htons(port);
 
-	int status = inet_pton(AF_INET, host.c_str(), &server_addr.sin_addr);
+	int status = inet_pton(AF_INET, host.c_str(), &_server_addr.sin_addr);
 
 	if(errno == EAFNOSUPPORT)
 		return false;
 
-	status = ::connect(client_socket, (sockaddr *)&server_addr, sizeof(server_addr));
+	status = ::connect(_client_socket, (sockaddr *)&_server_addr, sizeof(_server_addr));
 
 	if(status == 0)
 		return true;
@@ -147,5 +120,5 @@ bool SocketClient::connect(const std::string host, const int port)
 		return false;
 }
 void SocketClient::close_socket(){
-	close(client_socket);
+	close(_client_socket);
 }

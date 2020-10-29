@@ -21,23 +21,23 @@ public:
     SocketClient();
     virtual ~SocketClient();
 
-    // initialization
-    bool create();
-
+    // socket initialization
+    bool create(); 
+    // socket connect
     bool connect(const string host, const int port);
-
-    // data transmission
+    // sending imageData
     void sendImage(Mat img) const;
-    
+    // sending number
     void sendNumber(int number) const;
-
+    // receive vector that includes dishes from server	
     std::vector<std::string> recv() const;
+    // valid check
     bool is_valid();
 
     void close_socket();
 
 private:
-    int client_socket;
-    struct sockaddr_in server_addr;
-    const int size_message_length_ = 16;  // Buffer size for the length
+    int _client_socket;
+    struct sockaddr_in _server_addr;
+    const int _size_message_length_ = 16;  // Buffer size for the length
 };
