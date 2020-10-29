@@ -13,7 +13,7 @@ void Sound::play_sound(std::string dish){
         return;
     }
     else if(dish =="scan_start"){
-        system("canberra-gtk-play -f ~/Tracking-Food/data/sound/스캔중.wav");s
+        system("canberra-gtk-play -f ~/Tracking-Food/data/sound/스캔중.wav");
         return;
     }
     else if(dish=="scan_end"){
