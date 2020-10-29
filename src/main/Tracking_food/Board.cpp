@@ -13,6 +13,14 @@ using namespace std;
 Board::Board() {}
 
 
+
+float Board::rectArea(Rect rect) {
+    float area;
+    //사각형 영역의 넓이를 구함
+    area = rect.width * rect.height;
+    return area;
+}
+
 Mat Board::img_preproces(Mat src)
 {
     //이미지 전처리 과정
@@ -79,28 +87,35 @@ board_obj Board::get_target_area(Mat src)
 frgm_obj Board::frgm_board(Mat src)
 {
 
-    frgm_obj my_frgm_obj;
-    //이미지 전처리
+    
+    // 0.......이미지 전처리
     Mat img_pre = img_preproces(src);
-    //이미지 안에서 contours를 찾음
-    vector<vector<Point>> contours;
-    findContours(img_pre, contours, RETR_TREE, CHAIN_APPROX_SIMPLE);
 
-    imshow("Contours", img_pre);
+    Mat mask = getStructuringElement(MORPH_RECT, Size(2, 2), Point(1, 1));
+    Mat dilate_edge;
+    dilate(img_pre, dilate_edge, mask, Point(-1, -1), 2);
+    vector<vector<Point>> contours;  //이미지 안에서 contours를 찾음
+    findContours(dilate_edge, contours, RETR_TREE, CHAIN_APPROX_SIMPLE);
+
+    imshow("Contours", dilate_edge);
     waitKey();
+
 
     vector<vector<Point>> contours_poly(contours.size());
     vector<Rect> boundRect;
+    Rect temp_rect;
 
     //일정 크기 이하의 contour를 제거함
+    int target_area = src.size().width * src.size().height; // 식판 전체 크기
     for (size_t i = 0; i < contours.size(); i++)
     {
-        approxPolyDP(contours[i], contours_poly[i], 20, true);
+        approxPolyDP(contours[i], contours_poly[i], 5, true);
+        temp_rect = boundingRect(contours_poly[i]); // contours -> 사각형 
 
-        if (contourArea(contours_poly[i]) < 600 || contourArea(contours_poly[i]) > 2000)
-        {
+      if (rectArea(temp_rect) / target_area * 100 < 4 || rectArea(temp_rect) / target_area * 100 > 15){
             continue;
         }
+        cout << rectArea(temp_rect) / target_area << endl;
         cout << contourArea(contours_poly[i]) << endl;
         //필터링된 contours를 사각형으로 변환함
         boundRect.push_back(boundingRect(contours_poly[i]));
@@ -112,6 +127,7 @@ frgm_obj Board::frgm_board(Mat src)
 
     //위에서 구한 사각형 영역을 음식의 영역으로 인식하고
     //각각의 영역만큼 이미지를 crop하여 저장
+    frgm_obj my_frgm_obj;
     for (size_t i = 0; i < boundRect.size(); i++)
     {
         drawContours(drawing, contours_poly, (int)i, (0, 0, 255));
