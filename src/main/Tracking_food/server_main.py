@@ -1,5 +1,5 @@
 #!/usr/local/bin/python3
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import os, os.path
 import time
 from guess import Guess  # Keras load
@@ -17,7 +17,6 @@ class Main:
 
         # 0.... Keras 미리 로딩
         self.guess = Guess()
-
         # .......... 1. Server  TCP 소켓 열고 수신 대기
         TCP_IP = 'localhost'
         TCP_PORT = 1146
@@ -32,43 +31,35 @@ class Main:
         if pid == 0:
             subprocess.call(["./ResultFile"])
 
-
         # 2.... Parent process
         else:
-        # .......... 2. Client 접속 성공 & data 받기
+            # .......... 2. Client 접속 성공 & data 받기
             conn, addr = self.server.accept()
             print("접속에 성공했습니다")
             limit = 0
-            result = [] # 결과값을 담는 리스트
+            result = []  # 결과값을 담는 리스트
+            
             while True:  # server 의 while
-                
                 length = self.recvall(conn, 16)
-                
                 if length:
-                   
-
-                    if limit == 0:   # .......... 3. 이미지 데이터,  받은 이미지를 저장한다.
-                        print("들어오는 데이터", length)
+                    if limit == 0:  # .......... 3. 이미지 데이터,  받은 이미지를 저장한다.
                         mark = length.split(b'\n')[0]
-                        print(mark)
-                        print("들어올 이미지수입니다", mark)
+                        print("들어올 이미지 수입니다", mark)
                         limit = mark.decode()  # 들어올 총 이미지의 개수를 update
                     else:
                         stringData = self.recvall(conn, int(length))
                         data = numpy.fromstring(stringData, dtype='uint8')
-                        decimg = cv2.imdecode(data, 1)                        
-                        # 3. keras로 음식 맞추기
+                        decimg = cv2.imdecode(data, 1)
+                        # 3..... keras로 음식 맞추기
                         answer = self.guess.realGuess(decimg)  # 일단 급식판에 무슨 음식이 있는지 학습
                         result.append(answer)
-                        print("결과",result)
                         if len(result) == int(limit):
-                            # 4. 도출된 답 전송하기
-                            print("보내기", result)
+                            # 4..... 도출된 답 전송하기
+                            print("결과", result)
                             result = "\n\b\n\b".join(result)
                             conn.send(result.encode('utf-8'))
                             result = []  # 다음 사진을 위해 비우기
                             self.server.close()
-                            
 
             exit(0)
 
@@ -82,7 +73,7 @@ class Main:
             count -= len(newbuf)
         return buf
 
-   
+
 if __name__ == '__main__':
     main = Main()
     main.make_child_process()
