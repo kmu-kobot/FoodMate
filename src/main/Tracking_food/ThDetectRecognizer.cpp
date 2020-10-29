@@ -12,13 +12,15 @@ ThDetectRecognizer::ThDetectRecognizer(){
     _client.create();
     _client.connect("127.0.0.1", 1147);
 }
+
 ThDetectRecognizer::~ThDetectRecognizer(){}
-void* ::do_ThDetectRecognizer(const Mat& origin_frame, vector<pair<string, Rect> >& matched_result) {
+
+void* ThDetectRecognizer::do_ThDetectRecognizer(const Mat& frame, vector<pair<string, Rect> >& matched_result) {
      cout << "!!!!!!! consumer1 - ThDetectRecognizer  !!!!!!"<<endl;
     // .......1 식판의 영역을 구한다.
     // 중심 check , 식판의 위치가 휘어지면 
     board_obj b_o= _board.get_target_area(frame);  //이미지와 중심이 들어있는 구조체 반환
-    _board.crnt_point = b_o._board_center; // 식판의 중심좌표 update
+    _board.crnt_point = b_o.board_center; // 식판의 중심좌표 update
 
     // 일정 수준이상 식판이 움직이면 아래의 과정을 수행한다.
     // if (abs(board.pre_point.x - board.crnt_point.x) > 250 || abs(board.pre_point.y - board.crnt_point.y) > 25) {
