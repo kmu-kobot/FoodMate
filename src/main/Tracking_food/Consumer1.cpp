@@ -16,7 +16,7 @@ using namespace std;
 //Sound sound = Sound();
 Consumer1::Consumer1(){
     client.create();
-    client.connect("127.0.0.1", 1102);
+    client.connect("127.0.0.1", 1146);
 }
 Consumer1::~Consumer1(){}
 void* Consumer1::consumer_doing(const Mat& frame, vector<pair<string, Rect> >& matching_result) {
@@ -27,11 +27,14 @@ void* Consumer1::consumer_doing(const Mat& frame, vector<pair<string, Rect> >& m
     board.crnt_point = b_o.board_center; // 식판의 중심좌표 update
 
     // 일정 수준이상 식판이 움직이면 아래의 과정을 수행한다.
-    if (abs(board.pre_point.x - board.crnt_point.x) > 25 || abs(board.pre_point.y - board.crnt_point.y) > 25) {
+    // if (abs(board.pre_point.x - board.crnt_point.x) > 250 || abs(board.pre_point.y - board.crnt_point.y) > 25) {
+    if(matching_result.size() == 0){
         // 스캔 시작 안내를 띄운다 
        //-- sound.play_sound("scan_start");
-        
-        
+
+
+      //matching_result를 초기화 시키고 데이터를 담는다.
+        matching_result.clear();
         Mat board_img = b_o.board_img;
         
         // .......2 식판 내의 음식 영역
@@ -50,18 +53,14 @@ void* Consumer1::consumer_doing(const Mat& frame, vector<pair<string, Rect> >& m
 
         // .......3 소켓으로부터 답변을 전송 받는다.
          vector<string> result = client.recv(); // 값이 들어오길 기다린다.
-        //if (result.size() != 0) break;
-          cout << "서버로부터 답변이 왔습니다"<<result.size() <<endl;
-          
-
+         cout << "waiting_answer"<<endl;
         if (result.size()!=0){
-        //matching_result를 초기화 시키고 데이터를 담는다.
-          matching_result.clear();
           for (int i = 0; i < frgm_Rects.size(); i++) { // 소켓을 통해 받은 결과와 이미지의 이름을 매칭.
-              matching_result.push_back({result[i],frgm_Rects[i]});
+              matching_result.push_back(make_pair(result[i],frgm_Rects[i]));
 
           }
         }
+
         // 스캔 완료 안내를 띄운다 
       //--  sound.play_sound("scan_end");
     
