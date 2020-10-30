@@ -65,11 +65,11 @@ int main(int, char**) {
 			if (time(NULL) - press_time > 2)
 			{
 		        pthread_create(&producer_thread, NULL, producer_run, NULL);
-                pthread_create(&consumer_thread1, NULL, consumer_run1, NULL);
-                pthread_create(&consumer_thread2, NULL, consumer_run2, NULL);
-                break;
-            }
-        }
+			pthread_create(&consumer_thread1, NULL, consumer_run1, NULL);
+			pthread_create(&consumer_thread2, NULL, consumer_run2, NULL);
+			break;
+        	        }
+        	}
 	}
 
     
