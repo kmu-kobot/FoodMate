@@ -8,14 +8,19 @@
 #include <semaphore.h>
 #include "ThDetectRecognizer.h"
 #include "ThTracker.h"
+<<<<<<< HEAD
 #include "unistd.h"
 //#include <JetsonGPIO>           //https://github.com/pjueon/JetsonGPIO
+=======
+#include <JetsonGPIO>           //https://github.com/pjueon/JetsonGPIO
+#include <ctime>
+>>>>>>> 414af35799b54ea1c6e1c10404d2d607598f349b
 
 using namespace cv;
 using namespace std;
 //using namespace GPIO;
 #define MAXFRAME 60
-#define BOTTON 33
+#define BUTTON 33
 
 //GPIO::setmode(GPIO::BOARD);
 //GPIO::setup(BOTTON, GPIO::IN);
@@ -46,10 +51,12 @@ void* consumer_run1(void* arg);
 void* consumer_run2(void* arg);
 
 int main(int, char**) {
+    int press_time = 0;     //버튼 누른 시간
     vcap.open(0);
     sem_init(&empty, 0, MAXFRAME);
     sem_init(&full, 0, 0);
     sem_init(&mutex1, 0, 1);
+<<<<<<< HEAD
     sleep(3);	
     // pthread_mutex_init(&frameLocker, NULL);
     //if(GPIO::input(BOTTON) ==  GPIO::HIGH){
@@ -57,6 +64,29 @@ int main(int, char**) {
         pthread_create(&consumer_thread1, NULL, consumer_run1, NULL);
         pthread_create(&consumer_thread2, NULL, consumer_run2, NULL);
    // }
+=======
+    
+    // pthread_mutex_init(&frameLocker, NULL);
+    
+    cout << "Please press button for 3second";
+	while (true) {
+        //버튼을 누르지 않으면 press_time에 현재시간 저장
+		if (GPIO::input(BUTTON) ==  GPIO::LOW) {
+			press_time = time(NULL);
+		}
+        //버튼을 누르면 누른 시간으로부터 3초 지나고 실행
+		if else (GPIO::input(BUTTON) ==  GPIO::HIGH) {
+			if (time(NULL) - press_time > 2)
+			{
+		        pthread_create(&producer_thread, NULL, producer_run, NULL);
+			pthread_create(&consumer_thread1, NULL, consumer_run1, NULL);
+			pthread_create(&consumer_thread2, NULL, consumer_run2, NULL);
+			break;
+        	        }
+        	}
+	}
+
+>>>>>>> 414af35799b54ea1c6e1c10404d2d607598f349b
     
     pthread_join(producer_thread, NULL);
     pthread_join(consumer_thread1, NULL);
