@@ -18,5 +18,5 @@
 
 ## HOW TO USE
 
-* [Food Mate 사용법](how-to-use/food-mate.md)
+* [FoodMate 사용법](how-to-use/food-mate.md)
 
