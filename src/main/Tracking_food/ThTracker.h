@@ -4,6 +4,7 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include "Tracker.h"  
+#include "Sound.h"
 #include "Matcher.h"
 using namespace cv;
 
@@ -22,6 +23,6 @@ private:
 
 public:
 
-	void* do_ThTracker(const Mat& frame, vector<pair<string, Rect>>& result);
+	void* do_ThTracker(const Mat& frame, vector<pair<string, Rect>>& result, int push_btn_cnt);
 
 };

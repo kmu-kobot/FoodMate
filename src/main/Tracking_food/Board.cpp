@@ -78,8 +78,8 @@ board_obj Board::get_target_area(Mat src)
 
     //사각형을 관심영역으로 하고 이미지를 crop
     my_board_obj.board_img = src(boundRect);
-    imshow("Contours", my_board_obj.board_img);
-    waitKey();
+   // imshow("Contours", my_board_obj.board_img);
+   // waitKey();
 
     return my_board_obj;
 }
@@ -97,8 +97,8 @@ frgm_obj Board::frgm_board(Mat src)
     vector<vector<Point>> contours;  //이미지 안에서 contours를 찾음
     findContours(dilate_edge, contours, RETR_TREE, CHAIN_APPROX_SIMPLE);
 
-    imshow("Contours", dilate_edge);
-    waitKey();
+   // imshow("Contours", dilate_edge);
+   // waitKey();
 
 
     vector<vector<Point>> contours_poly(contours.size());
@@ -136,8 +136,8 @@ frgm_obj Board::frgm_board(Mat src)
         my_frgm_obj.crop_imgs.push_back(src(boundRect[i]));
         my_frgm_obj.crop_Rects.push_back(boundRect[i]);
     }
-    imshow("Contours", src);
-    waitKey();
+   // imshow("Contours", src);
+   // waitKey();
 
     return my_frgm_obj;
 }

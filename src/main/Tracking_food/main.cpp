@@ -8,17 +8,18 @@
 #include <semaphore.h>
 #include "ThDetectRecognizer.h"
 #include "ThTracker.h"
-#include <JetsonGPIO>           //https://github.com/pjueon/JetsonGPIO
+#include "unistd.h"
+//#include <JetsonGPIO>           //https://github.com/pjueon/JetsonGPIO
 
 using namespace cv;
 using namespace std;
-using namespace GPIO;
+//using namespace GPIO;
 #define MAXFRAME 60
 #define BOTTON 33
 
-GPIO::setmode(GPIO::BOARD);
-GPIO::setup(BOTTON, GPIO::IN);
-GPIO::cleanup();
+//GPIO::setmode(GPIO::BOARD);
+//GPIO::setup(BOTTON, GPIO::IN);
+//GPIO::cleanup();
 
 sem_t empty;
 sem_t full;
@@ -37,7 +38,7 @@ ThDetectRecognizer _ThDetectRecognizer = ThDetectRecognizer();
 queue<Mat> frameQueue;
 vector<pair<string, Rect> > matched_result;
 Mat currentFrame;
-int push_bnt_cnt = 0; // 버튼을 누른 횟수
+int push_btn_cnt = 0; // 버튼을 누른 횟수
 
 //
 void* producer_run(void* arg);
@@ -49,13 +50,13 @@ int main(int, char**) {
     sem_init(&empty, 0, MAXFRAME);
     sem_init(&full, 0, 0);
     sem_init(&mutex1, 0, 1);
-
+    sleep(3);	
     // pthread_mutex_init(&frameLocker, NULL);
-    if(GPIO::input(BOTTON) ==  GPIO::HIGH){
+    //if(GPIO::input(BOTTON) ==  GPIO::HIGH){
         pthread_create(&producer_thread, NULL, producer_run, NULL);
         pthread_create(&consumer_thread1, NULL, consumer_run1, NULL);
         pthread_create(&consumer_thread2, NULL, consumer_run2, NULL);
-    }
+   // }
     
     pthread_join(producer_thread, NULL);
     pthread_join(consumer_thread1, NULL);
@@ -67,14 +68,16 @@ int main(int, char**) {
 void* producer_run(void* arg) {
     for (;;) {
         // pthread_mutex_lock(&frameLocker);
-        while (frameQueue.size() == MAXFRAME) {
-            frameQueue.pop();
-        }
+       // while (frameQueue.size() == MAXFRAME) {
+	//    cout << "꽉찼습니다"<< endl;
+      //      frameQueue.pop();
+        //}
         sem_wait(&empty); 
         sem_wait(&mutex1);
         Mat frame;
         if (frameQueue.size() == MAXFRAME) frameQueue.pop();
         vcap >> frame;
+        resize(frame, frame, Size(500, 500));
 
         frameQueue.push(frame.clone());
         currentFrame = frameQueue.front();
@@ -84,22 +87,25 @@ void* producer_run(void* arg) {
 }
 
 void* consumer_run1(void* arg) {
+
     for (;;)
     {
         if (frameQueue.empty()) {
             continue;
         }
+
         sem_wait(&full);
         sem_wait(&mutex1);
 
         // Mat currentFrame = frameQueue.front();
-        if (push_bnt_cnt % 5 == 0) { // 식판 인식 버튼 5회눌렀을 경우
-            _ThDetectRecognizer.do_ThDetectRecognizer(currentFrame, matched_result);
+        if (push_btn_cnt % 5 == 0) { // 식판 인식 버튼 5회눌렀을 경우
+            _ThDetectRecognizer.do_ThDetectRecognizer(currentFrame, matched_result, push_btn_cnt);
         }
         // 이미지 식판 - > 반찬 영역 구함 -> socket
         frameQueue.pop();
         sem_post(&mutex1);
         sem_post(&empty);
+
     }
 }
 void* consumer_run2(void* arg) {
@@ -113,9 +119,9 @@ void* consumer_run2(void* arg) {
 
         // Mat currentFrame = frameQueue.front();
 
-        if (matched_result.size() != 0) {
-            _ThTracker.do_ThTracker(currentFrame, matched_result, push_bnt_cnt);
-        }
+      //  if (matched_result.size() != 0) {
+            _ThTracker.do_ThTracker(currentFrame, matched_result, push_btn_cnt);
+     //   }
         frameQueue.pop();
         sem_post(&mutex1);
         sem_post(&empty);

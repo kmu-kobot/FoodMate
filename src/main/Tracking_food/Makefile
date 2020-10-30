@@ -2,7 +2,7 @@ CC = g++
 CFLAGS = -std=c++11
 SRCS = Tracker.cpp Matcher.cpp Sound.cpp SocketClient.cpp Board.cpp ThDetectRecognizer.cpp ThTracker.cpp main.cpp  
 PROG = ResultFile
-LDFLAGS =-lpthread
+LDFLAGS =-lpthread -lJetsonGPIO 
 
 OPENCV = `pkg-config opencv4 --cflags --libs`
 LIBS = $(OPENCV)

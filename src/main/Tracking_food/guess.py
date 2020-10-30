@@ -35,13 +35,13 @@ class Guess:
         self.data[0] = normalized_image_array
         # run the inference
         prediction = self.model.predict(self.data)
-        print(prediction[0])  # 세부 예측빈도
+        #print(prediction[0])  # 세부 예측빈도
         max_pct = np.max(prediction[0])  # max_percentage
         max_pct_idx = np.argmax(prediction[0])  # max_percentage's index
         answer = label[max_pct_idx]
 
         # 디버깅용 코드
-        print("▶ " + answer)
+        #print("▶ " + answer)
         return answer
 
 

@@ -3,7 +3,7 @@
 #include <string>
 using namespace std;
 
-
+class Sound;
 class Sound{
 public:
     Sound();

@@ -12,6 +12,8 @@ using namespace std;
 void* ThTracker::do_ThTracker(const Mat& frame, vector<pair<string, Rect> >& result, int push_btn_cnt) {
 
     //############# 받은 이미지를 이용하여 ###################
+
+    cout << "thread 2 start!!" << endl;
     // .......1. 젓가락 포인터를 좌표를 구한다.
     Point center = _Tracker.track_point(frame);
 
@@ -25,7 +27,7 @@ void* ThTracker::do_ThTracker(const Mat& frame, vector<pair<string, Rect> >& res
         //cout << "결과: " << answer << endl;
     }
 
-    _Sound.play_sound(answer);
+    //_Sound.play_sound(answer);
     cout << "결과: " << answer << endl;
 
 

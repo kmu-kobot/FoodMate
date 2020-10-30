@@ -10,13 +10,15 @@ using namespace std;
 
 ThDetectRecognizer::ThDetectRecognizer(){
     _client.create();
-    _client.connect("127.0.0.1", 1147);
+    _client.connect("127.0.0.1", 1144);
 }
 
 ThDetectRecognizer::~ThDetectRecognizer(){}
 
-void* ThDetectRecognizer::do_ThDetectRecognizer(const Mat& frame, vector<pair<string, Rect> >& matched_result) {
-     cout << "!!!!!!! consumer1 - ThDetectRecognizer  !!!!!!"<<endl;
+void* ThDetectRecognizer::do_ThDetectRecognizer(const Mat& frame, vector<pair<string, Rect> >& matched_result, int push_btn_cnt) {
+     cout << "!!!!!!! consumer1   !!!!!!"<<endl;
+
+
     // .......1 식판의 영역을 구한다.
     // 중심 check , 식판의 위치가 휘어지면 
     board_obj b_o= _board.get_target_area(frame);  //이미지와 중심이 들어있는 구조체 반환
@@ -24,7 +26,7 @@ void* ThDetectRecognizer::do_ThDetectRecognizer(const Mat& frame, vector<pair<st
 
     // 일정 수준이상 식판이 움직이면 아래의 과정을 수행한다.
     // if (abs(board.pre_point.x - board.crnt_point.x) > 250 || abs(board.pre_point.y - board.crnt_point.y) > 25) {
-  //  if(matched_result.size() == 0){
+    if(push_btn_cnt % 5 == 0){
         // 스캔 시작 안내를 띄운다 
        //-- _sound.play_sound("scan_start");
 
@@ -42,11 +44,12 @@ void* ThDetectRecognizer::do_ThDetectRecognizer(const Mat& frame, vector<pair<st
 
         cout << frgm_imgs.size() <<endl;
         _client.sendNumber(f_o.crop_imgs.size());
-         for (int i = 0; i < frgm_imgs.size(); i++) { // 소켓을 통해 이미지를 전송한다.
-            cout << "전송" << endl;
+         for (int i = frgm_imgs.size()-1; i >= 0; i--) { // 소켓을 통해 이미지를 전송한다.
             _client.sendImage(frgm_imgs[i]);
+	    frgm_imgs.pop_back();
         }
 
+        //frgm_imgs.clear();
         // .......3 소켓으로부터 답변을 전송 받는다.
          vector<string> result = _client.recv(); // 값이 들어오길 기다린다.
          cout << "waiting_answer"<<endl;
@@ -55,9 +58,10 @@ void* ThDetectRecognizer::do_ThDetectRecognizer(const Mat& frame, vector<pair<st
               matched_result.push_back(make_pair(result[i],frgm_Rects[i]));
           }
         }
+	cout << "get answer!!" <<endl;
         // 스캔 완료 안내를 띄운다 
       //--  _sound.play_sound("scan_end");
-   // }
+    }
 
 
     // 현재의 식판의 중심좌표는 과거가 된다.

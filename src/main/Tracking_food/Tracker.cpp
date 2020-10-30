@@ -69,8 +69,7 @@ Point Tracker::track_point(Mat frame)
 
 	// 4.이진화 영상에 Canny 적용
 	Canny(foreground_mask, img_canny, 50, 100);
-	//디버깅용
-	imshow("canny_img", img_canny);
+	
 
 	// 5.숟가락을 찾으면 바로 반환하고, 숟가락이 없으면 젓가락 좌표 반환
 	//숟가락 포인트
@@ -78,7 +77,11 @@ Point Tracker::track_point(Mat frame)
 	s = detect_spoon(img_canny, 10, 50);
 	if (s[0] > 0 && s[1] > 0 && s[2] > 0){
 		circle(frame, Point(s[0], s[1]), s[2], Scalar(0, 255, 0), 2);
-		//circle(frame, Point(s[0], s[1]), 2, Scalar(255, 0, 0), -1);
+		circle(frame, Point(s[0], s[1]), 2, Scalar(255, 0, 0), -1);
+		//디버깅용
+		imshow("canny_img", frame);
+		cout << Point(s[0], s[1]);
+		waitKey();
 		return Point(s[0], s[1]);
 	}
 
@@ -87,10 +90,23 @@ Point Tracker::track_point(Mat frame)
 	c = detect_chopstic(img_canny, 70, 15, 100);
 	if (c[0] > 0 && c[1] > 0 && c[2] > 0 && c[3] > 0){
 		line(frame, Point(c[0], c[1]), Point(c[2], c[3]), Scalar(0, 255, 0), 2, 10);
+		circle(frame, Point(c[0], c[1]), 5, Scalar(255, 0, 0), -1);
+		//디버깅용
+		imshow("canny_img", frame);
+		cout << Point(c[1] > c[3] ? c[2] : c[0], c[1] > c[3] ? c[3] : c[1])<<endl;
+		waitKey();
+
 		//영상에서 더 위에있는 포인트 반환
 		return Point(c[1] > c[3] ? c[2] : c[0], c[1] > c[3] ? c[3] : c[1]);
-		//circle(frame, Point(x, y), 5, Scalar(255, 0, 0), -1);
+
 	}
+
+	//디버깅용
+	imshow("canny_img", frame);
+	cout << Point(c[1] > c[3] ? c[2] : c[0], c[1] > c[3] ? c[3] : c[1])<<endl;
+	waitKey();
+
+
 }
 
 

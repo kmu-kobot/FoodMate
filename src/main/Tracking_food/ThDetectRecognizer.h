@@ -17,6 +17,6 @@ public:
 	ThDetectRecognizer();
 	~ThDetectRecognizer();	
 	
-	void* do_ThDetectRecognizer(const Mat& frame, vector<pair<string, Rect>>& matched_result);
+	void* do_ThDetectRecognizer(const Mat& frame, vector<pair<string, Rect>>& matched_result, int push_btn_cnt);
 };
 
