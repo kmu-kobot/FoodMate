@@ -92,7 +92,7 @@ void* producer_run(void* arg) {
         sem_wait(&empty); 
         sem_wait(&mutex1);
         Mat frame;
-        if (frameQueue.size() == MAXFRAME) frameQueue.pop();
+        while (frameQueue.size() == MAXFRAME) frameQueue.pop();
         vcap >> frame;
         resize(frame, frame, Size(500, 500));
 
