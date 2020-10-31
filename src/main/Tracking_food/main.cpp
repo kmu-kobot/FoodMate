@@ -89,10 +89,14 @@ void* producer_run(void* arg) {
 	//    cout << "꽉찼습니다"<< endl;
       //      frameQueue.pop();
         //}
+	    
+	while (frameQueue.size() == MAXFRAME){
+	    frameQueue.pop();
+	}
         sem_wait(&empty); 
         sem_wait(&mutex1);
         Mat frame;
-        while (frameQueue.size() == MAXFRAME) frameQueue.pop();
+        
         vcap >> frame;
         resize(frame, frame, Size(500, 500));
 
@@ -107,14 +111,13 @@ void* consumer_run1(void* arg) {
 
     for (;;)
     {
-        if (frameQueue.empty()) {
-            continue;
-        }
-
         sem_wait(&full);
         sem_wait(&mutex1);
+	while(frameQueue.empty()) {
+            sem_post(&mutex1);
+            sem_post(&empty);
+        }
 
-        // Mat currentFrame = frameQueue.front();
         if (push_btn_cnt % 5 == 0) { // 식판 인식 버튼 5회눌렀을 경우
             _ThDetectRecognizer.do_ThDetectRecognizer(currentFrame, matched_result, push_btn_cnt);
         }
@@ -128,16 +131,18 @@ void* consumer_run1(void* arg) {
 void* consumer_run2(void* arg) {
     for (;;)
     {
-        if (frameQueue.empty()) {
-            continue;
-        }
+//         if (frameQueue.empty()) {
+//             continue;
+//         }
         sem_wait(&full);
         sem_wait(&mutex1);
-
-        // Mat currentFrame = frameQueue.front();
-
+	while(frameQueue.empty()) {
+            sem_post(&mutex1);
+            sem_post(&empty);
+        }
+	    
       //  if (matched_result.size() != 0) {
-            _ThTracker.do_ThTracker(currentFrame, matched_result, push_btn_cnt);
+        _ThTracker.do_ThTracker(currentFrame, matched_result, push_btn_cnt);
      //   }
         frameQueue.pop();
         sem_post(&mutex1);
