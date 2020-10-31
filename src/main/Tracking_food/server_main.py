@@ -59,6 +59,7 @@ class Main:
                             result = "\n\b\n\b".join(result)
                             conn.send(result.encode('utf-8'))
                             result = []  # 다음 사진을 위해 비우기
+                            limit = 0
                             self.server.close()
 
             exit(0)
