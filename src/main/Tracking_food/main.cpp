@@ -8,13 +8,9 @@
 #include <semaphore.h>
 #include "ThDetectRecognizer.h"
 #include "ThTracker.h"
-<<<<<<< HEAD
 #include "unistd.h"
-//#include <JetsonGPIO>           //https://github.com/pjueon/JetsonGPIO
-=======
 #include <JetsonGPIO>           //https://github.com/pjueon/JetsonGPIO
 #include <ctime>
->>>>>>> 414af35799b54ea1c6e1c10404d2d607598f349b
 
 using namespace cv;
 using namespace std;
@@ -56,16 +52,8 @@ int main(int, char**) {
     sem_init(&empty, 0, MAXFRAME);
     sem_init(&full, 0, 0);
     sem_init(&mutex1, 0, 1);
-<<<<<<< HEAD
-    sleep(3);	
-    // pthread_mutex_init(&frameLocker, NULL);
-    //if(GPIO::input(BOTTON) ==  GPIO::HIGH){
-        pthread_create(&producer_thread, NULL, producer_run, NULL);
-        pthread_create(&consumer_thread1, NULL, consumer_run1, NULL);
-        pthread_create(&consumer_thread2, NULL, consumer_run2, NULL);
-   // }
-=======
-    
+
+    sleep(3);
     // pthread_mutex_init(&frameLocker, NULL);
     
     cout << "Please press button for 3second";
@@ -86,7 +74,6 @@ int main(int, char**) {
         	}
 	}
 
->>>>>>> 414af35799b54ea1c6e1c10404d2d607598f349b
     
     pthread_join(producer_thread, NULL);
     pthread_join(consumer_thread1, NULL);
