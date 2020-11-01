@@ -1,6 +1,7 @@
 # !/usr/local/bin/python3
 # -*- coding:utf-8 -*-
 import os
+
 # "play sound in cmd" not using playsound module
 class Sound:
     def __init__(self):
