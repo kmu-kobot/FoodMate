@@ -25,8 +25,8 @@ public:
 	//살색 지우는 함수
 	Mat make_mask_image(Mat img);
 	//tracking point 젓가락의 좌표 반환 _______ 이것만 사용!!
-	Point2i track_point(Mat frame);
+	void track_point();
 
 	int get_track_point_x();
-    int get_track_point_y();
+   	int get_track_point_y();
 };
