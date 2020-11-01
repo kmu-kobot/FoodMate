@@ -20,3 +20,8 @@ class Sound:
         else: # 반찬 이름이 들어울 경우
             os.system("canberra-gtk-play -f ~/Tracking-Food/data/sound/" + dish_name + ".wav")
             return
+
+if __name__ == '__main__':
+    test = Sound()
+    test.play_sound("none")
+    test.play_sound("계란말이")
