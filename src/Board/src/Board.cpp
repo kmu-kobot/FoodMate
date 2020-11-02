@@ -223,5 +223,3 @@ extern "C" {
     int crop_Rects_h(Board * b, int idex){return  b->get_crop_Rects_h(idex);}
     int crop_Rects_size(Board * b){return b->get_crop_Rects_size();}
 }
-
-
