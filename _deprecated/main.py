@@ -7,7 +7,8 @@ from board import Board
 from track_blue import Track_blue
 from guess import Guess
 from playsound import playsound
-from Filtering import Filter
+import sound
+
 
 
 class MainDish:
@@ -15,25 +16,18 @@ class MainDish:
     def __init__(self):
 
         # img 폴더 안에 있던 이미지 모두 삭제
+        for file in os.scandir('../code/img'):
+            os.remove(file.path)
+            
         for file in os.scandir('../data/img'):
             os.remove(file.path)
 
         # 웹캠 사용해서 식판 스캔
-        self.cap = cv2.VideoCapture(-1) 
+        self.cap = cv2.VideoCapture(0) 
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-
-        # 적절한 사진 filtering 기능
-        self.filter = Filter()
-        while True:
-            ret, self.img = self.cap.read()
-            cv2.imwrite('../data/img/Scanned_image.jpg', self.img, params=[cv2.IMWRITE_JPEG_QUALITY, 70])
-            check_right_img = self.filter.check_right()
-
-            if check_right_img:
-                playsound('../data/sound/음식이+보입니다.mp3')
-                break
-
+        ret, self.img = self.cap.read()
+        cv2.imwrite('img/board.jpg',self.img, params=[cv2.IMWRITE_JPEG_QUALITY,70])
 
         # 젓가락의 위치
         self.Cx, self.Cy = 0, 0
@@ -43,13 +37,16 @@ class MainDish:
 
         # 모든 클래스의 객체생성
         # 1. 급식판 좌표
-        self.board = Board(self.img)
-        self.x_strt, self.x_end, self.y_strt, self.y_end = self.board.edgeOfBoard()
-        self.board.frgm_board(self.board.edgeOfBoard)  # 급식판 메뉴따기 함수 callback
+        self.board = Board()
+        self.board.get_target_area()  # 급식판 메뉴따기 함수 callback
+        self.board.board_frgm_board()
+        self.board.get_crop_Rects()
+        
         # 2. 추적할 파란색 범위
         trackBlue = Track_blue(self.img)
         self.hsv, self.lower_blue1, self.upper_blue1, self.lower_blue2, self.upper_blue2,\
                             self.lower_blue3, self.upper_blue3 = trackBlue.find_target()
+                            
         # 3. keras로 음식 맞추기 
         self.guess.realGuess()  # 일단 급식판에 무슨 음식이 있는지 학습
         self.answer = self.guess.matchFood(self.Cx, self.Cy, self.board.box_x, self.board.box_y)
@@ -96,10 +93,10 @@ class MainDish:
                 self.answer = self.guess.matchFood(self.Cx, self.Cy, self.board.box_x, self.board.box_y)
 
 
-            # 파란색 부분 테두리 그리기
-            cv2.rectangle(img_color, (self.x_strt, self.y_strt), (self.x_end, self.y_end), (0, 0, 0), 2)
+            #파란색 부분 테두리 그리기
+            #cv2.rectangle(img_color, (self.x_strt, self.y_strt), (self.x_end, self.y_end), (0, 0, 0), 2)
 
-            # 마스크 이미지로 원본 이미지에서 범위값에 해당되는 영상 부분을 획득합니다.
+            #마스크 이미지로 원본 이미지에서 범위값에 해당되는 영상 부분을 획득합니다.
             img_result = cv2.bitwise_and(img_color, img_color, mask=img_mask)
             cv2.imshow('img_color', img_color)
             cv2.imshow('img_result', img_result)
@@ -115,6 +112,7 @@ class MainDish:
 
 
 if __name__ == '__main__':
+    sound1 =sound.Sound()
     maindish = MainDish() 
-    playsound('../data/sound/스캔완료.mp3')
+    sound1.play_sound("scan_end")
     maindish.goingOn()
