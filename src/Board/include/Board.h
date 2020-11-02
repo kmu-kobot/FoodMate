@@ -19,7 +19,6 @@ typedef struct{
 }PT_data;
 
 
-
 class Board{
     private:
         int thresh = 25;
