@@ -1,6 +1,7 @@
 # Food recognition service for blind 
 제 14회 공개 SW 개발자대회 출품작   
 - website : https://www.oss.kr/
+- gitbook : https://app.gitbook.com/@kobot-1/s/tracking-food/
 ## 1) 프로젝트 개요
 우리는 눈을 통해 많은 정보를 받아들이고, 그 정보를 통해 일상 속 많은 선택을 내린다. 그렇기 때문에 시각을
 통해 정보를 받지 못하는 것은 생활하는 데에 필수적인 정보를 얻지 못하는 것과 같다. 시각 장애인의 경우 밥을
