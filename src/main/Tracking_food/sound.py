@@ -27,7 +27,7 @@ class Sound:
             os.system("canberra-gtk-play -f ~/Tracking-Food/data/sound/스캔완료.wav")
             return
         else: # 반찬 이름이 들어울 경우
-            os.system("canberra-gtk-play -f ~/tracking_food/Tracking-Food/data/sound/" + str(dish_name) + ".wav")
+            os.system("canberra-gtk-play -f ~/Tracking-Food/data/sound/" + str(dish_name) + ".wav")
             return
         
 
