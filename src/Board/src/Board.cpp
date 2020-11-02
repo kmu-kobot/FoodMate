@@ -39,9 +39,10 @@ Mat Board::img_preproces(Mat src)
     return canny_output;
 }
 
+
 void Board::get_target_area()
 {
-    Mat src = imread("board.jpg");
+    Mat src = imread("img/board.jpg");
     resize(src, src, Size(640,480));
     imshow("Contours", src);
     waitKey();
@@ -52,7 +53,7 @@ void Board::get_target_area()
     //끊어진 윤곽선을 잇기 위해 canny edge에서 구한 point들을 확장
     Mat mask = getStructuringElement(MORPH_RECT, Size(5, 5), Point(1, 1));
     Mat dilate_edge;
-    dilate(img_pre, dilate_edge, mask, Point(-1, -1), 4);
+    dilate(img_pre, dilate_edge, mask, Point(-1, -1), 3);
 
     imshow("Contours", dilate_edge);
     waitKey();
@@ -90,13 +91,12 @@ void Board::get_target_area()
     my_board_obj.crop_imgs = src(boundRect);
     imshow("Contours", my_board_obj.crop_imgs);
     waitKey();
-    imwrite("target_area.jpg", my_board_obj.crop_imgs);
+    imwrite("img/target_area.jpg", my_board_obj.crop_imgs);
 }
 
 void Board::frgm_board()
 {   
-    Mat src = imread("target_area.jpg");
-    resize(src, src, Size(640,480));
+    Mat src = imread("img/target_area.jpg");
     //사진의 넓이를 구함
     int target_area = src.size().width * src.size().height;
 
@@ -153,7 +153,7 @@ void Board::frgm_board()
         cout << boundRect[i].x << " " << boundRect[i].y << " " << boundRect[i].width << " " << boundRect[i].height << endl;
         my_frgm_obj.crop_imgs.push_back(src(boundRect[i]));
         my_frgm_obj.crop_Rects.push_back(boundRect[i]);
-        imwrite("img/my_frgm_obj" + to_string(i) +  ".jpg",src(boundRect[i]));
+        imwrite("../data/img/" + to_string(i) +  ".jpg",src(boundRect[i]));
     }
     imshow("Contours", src);
     waitKey();
@@ -171,15 +171,15 @@ int Board::get_crop_Rects_x(int idex){
     return my_frgm_obj.crop_Rects[idex].x;
 }
 int Board::get_crop_Rects_y(int idex){
-    return my_frgm_obj.crop_Rects[idex].x;
+    return my_frgm_obj.crop_Rects[idex].y;
 
 }
 int Board::get_crop_Rects_w(int idex){
-    return my_frgm_obj.crop_Rects[idex].x;
+    return my_frgm_obj.crop_Rects[idex].width;
 
 }
 int Board::get_crop_Rects_h(int idex){
-    return my_frgm_obj.crop_Rects[idex].x;
+    return my_frgm_obj.crop_Rects[idex].height ;
 }
 int Board::get_crop_Rects_size(){
     return my_frgm_obj.crop_Rects.size();
@@ -223,3 +223,5 @@ extern "C" {
     int crop_Rects_h(Board * b, int idex){return  b->get_crop_Rects_h(idex);}
     int crop_Rects_size(Board * b){return b->get_crop_Rects_size();}
 }
+
+
