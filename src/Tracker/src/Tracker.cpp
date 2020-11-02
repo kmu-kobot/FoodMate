@@ -3,6 +3,10 @@
 
 Point2i pt; 
 
+
+Tracker::Tracker(){}
+
+
 //젓가락 좌표 반환하는 함수
 Vec4i Tracker::detect_chopstic(Mat img, int thr, int minLineLength, int maxLineGap)
 {
@@ -42,75 +46,86 @@ Mat Tracker::make_mask_image(Mat img)
 //tracking point 젓가락의 좌표 반환
 void Tracker::track_point()
 {	
+
+	setmode(BOARD);
+    setup(BUTTON, IN);
+
 	VideoCapture cap(0);
+	cap.set(3, 640);
+    cap.set(4, 480);
 	Mat frame;
-	cap >> frame;
-	if (frame.empty()){
-		cout << "Could not open camera :(" << endl;
-	}
+	while(1){
+		cap >> frame;
 
-	//frame 영상 전처리(640x480, 좌우반전, 3x3 가우시안 블러)
-	resize(frame, frame, Size(640, 480));
-	flip(frame, frame, 1);
-	GaussianBlur(frame, blur, Size(5, 5), 0);
+		if (frame.empty()){
+			cout << "Could not open camera :(" << endl;
+		}
 
-	//초기 차영상 마스크 Mat 생성
-	if (foreground_mask.empty()){
-		foreground_mask.create(frame.size(), frame.type());
-	}
+		//frame 영상 전처리(640x480, 좌우반전, 3x3 가우시안 블러)
+		flip(frame, frame, 1);
+		GaussianBlur(frame, blur, Size(5, 5), 0);
 
-	// 1.차영상 마스크 씌우고 노이즈 제거(9x9 미디언 필터)
-	bg_model->apply(blur, foreground_mask);
-	Mat kernel = getStructuringElement(MORPH_RECT, Size(9, 9), Point(-1, -1));
-	morphologyEx(foreground_mask, foreground_mask, MORPH_CLOSE, kernel);
-	medianBlur(foreground_mask, foreground_mask, 5);
+		//초기 차영상 마스크 Mat 생성
+		if (foreground_mask.empty()){
+			foreground_mask.create(frame.size(), frame.type());
+		}
 
-	// 2.차영상에서 살색제거 후 skin_mask에 저장
-	Mat copy_frame = frame.clone();
+		// 1.차영상 마스크 씌우고 노이즈 제거(9x9 미디언 필터)
+		bg_model->apply(blur, foreground_mask);
+		Mat kernel = getStructuringElement(MORPH_RECT, Size(9, 9), Point(-1, -1));
+		morphologyEx(foreground_mask, foreground_mask, MORPH_CLOSE, kernel);
+		medianBlur(foreground_mask, foreground_mask, 5);
 
-	skin_mask = make_mask_image(frame);
 
-	// 3.식기만 남은 영상 이진화
-	bitwise_and(skin_mask, foreground_mask, foreground_mask);
+		// 2.차영상에서 살색제거 후 skin_mask에 저장
+		Mat copy_frame = frame.clone();
 
-	// 4.이진화 영상에 Canny 적용
-	Canny(foreground_mask, img_canny, 50, 100);
-	
+		skin_mask = make_mask_image(frame);
 
-	// 5.숟가락을 찾으면 바로 반환하고, 숟가락이 없으면 젓가락 좌표 반환
-	//숟가락 포인트
-	Vec3f s = NULL;
-	s = detect_spoon(img_canny, 10, 50);
-	if (s[0] > 0 && s[1] > 0 && s[2] > 0){
-		circle(frame, Point(s[0], s[1]), s[2], Scalar(0, 255, 0), 2);
-		circle(frame, Point(s[0], s[1]), 2, Scalar(255, 0, 0), -1);
+		// 3.식기만 남은 영상 이진화
+		bitwise_and(skin_mask, foreground_mask, foreground_mask);
+
+		// 4.이진화 영상에 Canny 적용
+		Canny(foreground_mask, img_canny, 50, 100);
+		
+
+		// 5.숟가락을 찾으면 바로 반환하고, 숟가락이 없으면 젓가락 좌표 반환
+		//숟가락 포인트
+		Vec3f s = NULL;
+		s = detect_spoon(img_canny, 10, 50);
+		if (s[0] > 0 && s[1] > 0 && s[2] > 0){
+			circle(frame, Point(s[0], s[1]), s[2], Scalar(0, 255, 0), 2);
+			circle(frame, Point(s[0], s[1]), 2, Scalar(255, 0, 0), -1);
+			//디버깅용
+			//imshow("canny_img", frame);
+			cout << Point(s[0], s[1]);
+			//waitKey();
+			pt = Point(s[0], s[1]);
+		}
+
+		//젓가락 포인트
+		Vec4i c = NULL;
+		c = detect_chopstic(img_canny, 70, 15, 100);
+		if (c[0] > 0 && c[1] > 0 && c[2] > 0 && c[3] > 0){
+			line(frame, Point(c[0], c[1]), Point(c[2], c[3]), Scalar(0, 255, 0), 2, 10);
+			circle(frame, Point(c[0], c[1]), 5, Scalar(255, 0, 0), -1);
+			//디버깅용
+			//imshow("canny_img", frame);
+			cout << Point(c[1] > c[3] ? c[2] : c[0], c[1] > c[3] ? c[3] : c[1])<<endl;
+			//waitKey();
+
+			//영상에서 더 위에있는 포인트 반환
+			pt = Point(c[1] > c[3] ? c[2] : c[0], c[1] > c[3] ? c[3] : c[1]);
+
+		}
+
 		//디버깅용
-		imshow("canny_img", frame);
-		cout << Point(s[0], s[1]);
-		waitKey();
-		pt = Point(s[0], s[1]);
+		imshow("w", frame);
+		if(waitKey(10) > 0 || input(BUTTON) ==  HIGH)
+			break;
+		//cout << Point(c[1] > c[3] ? c[2] : c[0], c[1] > c[3] ? c[3] : c[1])<<endl;
+		//waitKey();
 	}
-
-	//젓가락 포인트
-	Vec4i c = NULL;
-	c = detect_chopstic(img_canny, 70, 15, 100);
-	if (c[0] > 0 && c[1] > 0 && c[2] > 0 && c[3] > 0){
-		line(frame, Point(c[0], c[1]), Point(c[2], c[3]), Scalar(0, 255, 0), 2, 10);
-		circle(frame, Point(c[0], c[1]), 5, Scalar(255, 0, 0), -1);
-		//디버깅용
-		imshow("canny_img", frame);
-		cout << Point(c[1] > c[3] ? c[2] : c[0], c[1] > c[3] ? c[3] : c[1])<<endl;
-		waitKey();
-
-		//영상에서 더 위에있는 포인트 반환
-		pt = Point(c[1] > c[3] ? c[2] : c[0], c[1] > c[3] ? c[3] : c[1]);
-
-	}
-
-	//디버깅용
-	imshow("canny_img", frame);
-	cout << Point(c[1] > c[3] ? c[2] : c[0], c[1] > c[3] ? c[3] : c[1])<<endl;
-	waitKey();
 }
 int Tracker::get_track_point_x(){
 	return pt.x;
