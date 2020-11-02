@@ -15,14 +15,8 @@ class Board(object):
         self.obj = self.board_lib.Board_new()
  
     def img_preproces(self, src):
-        encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 90]
-        result, imgencode = cv2.imencode('.jpg', src, encode_param)
-        data = numpy.array(imgencode)
-        stringData = data.tostring()
-        
-        data1 = self.board_lib.board_img_preproces( self.obj, stringData, src.shape[0], src.shape[1])
-        
-        cv2.imshow("test2", data1)
+
+        cv2.imshow("test2", self.board_lib.board_img_preproces( self.obj, src ))
  
     def get_target_area( self) :
         self.board_lib.board_get_target_area(self.obj)
@@ -68,6 +62,3 @@ if __name__ == '__main__':
     rects = b.get_crop_Rects()
     print(rects)
     
-    
-
-
