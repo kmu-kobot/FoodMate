@@ -57,22 +57,22 @@ int main(int, char**) {
     // pthread_mutex_init(&frameLocker, NULL);
     
     cout << "Please press button for 3second";
-	while (true) {
+   while (true) {
         //버튼을 누르지 않으면 press_time에 현재시간 저장
-		if (GPIO::input(BUTTON) ==  GPIO::LOW) {
-			press_time = time(NULL);
-		}
+      if (GPIO::input(BUTTON) ==  GPIO::LOW) {
+         press_time = time(NULL);
+      }
         //버튼을 누르면 누른 시간으로부터 3초 지나고 실행
-		if else (GPIO::input(BUTTON) ==  GPIO::HIGH) {
-			if (time(NULL) - press_time > 2)
-			{
-		        pthread_create(&producer_thread, NULL, producer_run, NULL);
-			pthread_create(&consumer_thread1, NULL, consumer_run1, NULL);
-			pthread_create(&consumer_thread2, NULL, consumer_run2, NULL);
-			break;
-        	        }
-        	}
-	}
+      if else (GPIO::input(BUTTON) ==  GPIO::HIGH) {
+         if (time(NULL) - press_time > 2)
+         {
+              pthread_create(&producer_thread, NULL, producer_run, NULL);
+             pthread_create(&consumer_thread1, NULL, consumer_run1, NULL);
+             pthread_create(&consumer_thread2, NULL, consumer_run2, NULL);
+             break;
+           }
+        }
+   }
 
     
     pthread_join(producer_thread, NULL);
@@ -86,66 +86,56 @@ void* producer_run(void* arg) {
     for (;;) {
         // pthread_mutex_lock(&frameLocker);
        // while (frameQueue.size() == MAXFRAME) {
-	//    cout << "꽉찼습니다"<< endl;
+   //    cout << "꽉찼습니다"<< endl;
       //      frameQueue.pop();
         //}
-	    
-	while (frameQueue.size() == MAXFRAME){
-	    frameQueue.pop();
-	}
-        sem_wait(&empty); 
-        sem_wait(&mutex1);
         Mat frame;
-        
         vcap >> frame;
         resize(frame, frame, Size(500, 500));
-
+        
+        sem_wait(&empty); 
+        sem_wait(&mutex1);
+        
+        if (frameQueue.size() == MAXFRAME) frameQueue.pop();
+        
         frameQueue.push(frame.clone());
-        currentFrame = frameQueue.front();
+        currentFrame = frameQueue.front(); // producer가 현재 이미지를 등록
+
         sem_post(&mutex1);
         sem_post(&full);
+        
+
     }
 }
 
 void* consumer_run1(void* arg) {
 
-    for (;;)
-    {
-        sem_wait(&full);
-        sem_wait(&mutex1);
-	while(frameQueue.empty()) {
-            sem_post(&mutex1);
-            sem_post(&empty);
-        }
+    for (;;){
+        
+        if (frameQueue.empty()) continue;
 
         if (push_btn_cnt % 5 == 0) { // 식판 인식 버튼 5회눌렀을 경우
             _ThDetectRecognizer.do_ThDetectRecognizer(currentFrame, matched_result, push_btn_cnt);
         }
-        // 이미지 식판 - > 반찬 영역 구함 -> socket
-        frameQueue.pop();
-        sem_post(&mutex1);
-        sem_post(&empty);
-
     }
 }
+
 void* consumer_run2(void* arg) {
-    for (;;)
-    {
-//         if (frameQueue.empty()) {
-//             continue;
-//         }
+    for (;;){
+        
+        if (frameQueue.empty()) continue;
+        
         sem_wait(&full);
         sem_wait(&mutex1);
-	while(frameQueue.empty()) {
-            sem_post(&mutex1);
-            sem_post(&empty);
-        }
-	    
-      //  if (matched_result.size() != 0) {
-        _ThTracker.do_ThTracker(currentFrame, matched_result, push_btn_cnt);
-     //   }
+        //Mat currentFrame = frameQueue.front();
         frameQueue.pop();
         sem_post(&mutex1);
         sem_post(&empty);
+        
+
+        if (matched_result.size() != 0) {
+            _ThTracker.do_ThTracker(currentFrame, matched_result, push_btn_cnt);
+        }
+        
     }
 }
