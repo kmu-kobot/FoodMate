@@ -6,12 +6,9 @@ from PIL import Image, ImageOps
 import numpy as np
 import os
 from playsound import playsound
-import Jetson.GPIO as GPIO
 from natsort import natsorted, ns
+import sound
 
-# Jetson nano GPIO 핀 초기화
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(33, GPIO.IN)
 
 class Guess:
     def __init__(self):
@@ -68,7 +65,7 @@ class Guess:
     # 음식과 이름을 위치에 따라서 확인해 값을 준다. (좌표위치와, box위치) => answer 정답을 반환
     def matchFood(self, x, y, w_lst, h_lst):
         answer = ''  # 정답을 반환
-        if GPIO.input(33) == 0:
+        if True:
             for i in range(len(w_lst)):
                 if w_lst[i][0] < x < w_lst[i][1] and h_lst[i][0] < y < h_lst[i][1]:  # 어떤 한 박스의 영역에만 들어와도
                     answer = (self.result[i])  # 이부분이 케라스의 result와 연동되어야할 부분
@@ -79,7 +76,8 @@ class Guess:
             print(x)
             print(y)
             print(answer)
-            playsound('../data/sound/'+answer+'.mp3')
+            sound1 =sound.Sound()
+            sound1.play_sound(answer)
         return answer
 
 if __name__ == '__main__':
