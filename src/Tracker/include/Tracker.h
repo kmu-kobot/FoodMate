@@ -1,10 +1,13 @@
 #pragma once
 #include <opencv2/opencv.hpp>
+#include <JetsonGPIO.h>
 #include <vector>
+
 using namespace cv;
 using namespace std;
+using namespace GPIO;
 
-
+#define BUTTON 33
 
 class Tracker {
 private:
