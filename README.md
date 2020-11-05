@@ -7,10 +7,11 @@
 FoodMate는 다양한 음식 사진이 학습된 모델과 입력되는 영상을 비교하여 현재 숟가락 또는 젓가락으로 가리키고 있는 음식이 어떤 음식인지 판단하고 그 음식의 종류를 음성으로 알려 줍니다. 따라서 **FoodMate는 사용자들에게 식탁에서의 내비게이션**이 될 수 있을 것이라고 기대합니다.      
 
 ## 2) Manual
-FoodMate는 오픈소스 프로젝트 입니다. 더 다양한 내용을 아래 gitbook에서 확인할 수 있습니다.  
+FoodMate는 오픈소스 프로젝트 입니다. 더 다양한 내용을 아래의 gitbook에서 확인할 수 있습니다.  
 :bookmark: https://app.gitbook.com/@kobot-1/s/tracking-food/
 ## 3) License
-FoodMate는 [MIT License](https://app.gitbook.com/@kobot-1/s/tracking-food/license-1/untitled)를 따릅니다.
+FoodMate의 라이센스는 아래의 gitbook에서 확인할 수 있습니다
+:bookmark:https://app.gitbook.com/@kobot-1/s/tracking-food/license-1/untitled
 ## 4) Member 
 정현성, 박민정, 배한빈, 조혜영
 
