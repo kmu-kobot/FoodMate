@@ -10,7 +10,7 @@ Food mate는 다양한 음식 사진이 학습된 모델과 입력되는 영상�
 Food mate는 오픈소스 프로젝트 입니다. 더 다양한 내용을 아래 gitbook에서 확인할 수 있습니다.  
 :bookmark: https://app.gitbook.com/@kobot-1/s/tracking-food/
 ## 3) License
-
+FoodMate는 [MIT License](https://app.gitbook.com/@kobot-1/s/tracking-food/license-1/untitled)를 따릅니다.
 ## 4) Member 
 정현성, 박민정, 배한빈, 조혜영
 
