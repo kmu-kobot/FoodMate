@@ -11,7 +11,7 @@ class Tracker(object):
  
     def __init__(self):
         print(0)
-        self.track_lib = cdll.LoadLibrary('./libTrack.so')
+        self.track_lib = cdll.LoadLibrary('./libTracker.so')
         print(10)
         self.obj = self.track_lib.Tracker_new()
         print(1)
@@ -25,18 +25,6 @@ class Tracker(object):
         track_point_y = self.track_lib.track_point_y(self.obj)
 
         point = [track_point_x, track_point_y]
-        return point
+        return track_point_x , track_point_y
 
-
-
-if __name__ == '__main__':
-
-    t = Tracker()
-    pts = t.track_point()   
-
-#    while(\True):
-#        t = Tracker()
-#        pts = t.get_track_point()
-#        print(pts)
-        
     
