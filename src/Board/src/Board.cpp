@@ -42,10 +42,10 @@ Mat Board::img_preproces(Mat src)
 
 void Board::get_target_area()
 {
-    Mat src = imread("img/board.jpg");
-    resize(src, src, Size(640,480));
-    imshow("Contours", src);
-    waitKey();
+
+    Mat src = imread("../data/img/Scanned_image.jpg");
+    // imshow("Contours", src);
+    // waitKey();
 
     //이미지에서 식판의 영역만을 추출
     Mat img_pre = img_preproces(src);
@@ -55,8 +55,8 @@ void Board::get_target_area()
     Mat dilate_edge;
     dilate(img_pre, dilate_edge, mask, Point(-1, -1), 3);
 
-    imshow("Contours", dilate_edge);
-    waitKey();
+    // imshow("Contours", dilate_edge);
+    // waitKey();
 
 
     //edge를 확장한 이미지에서 contour를 찾음
@@ -89,14 +89,14 @@ void Board::get_target_area()
 
     //사각형을 관심영역으로 하고 이미지를 crop
     my_board_obj.crop_imgs = src(boundRect);
-    imshow("Contours", my_board_obj.crop_imgs);
-    waitKey();
-    imwrite("img/target_area.jpg", my_board_obj.crop_imgs);
+    // imshow("Contours", my_board_obj.crop_imgs);
+    // waitKey();
+    imwrite("../data/img/target_area.jpg", my_board_obj.crop_imgs);
 }
 
 void Board::frgm_board()
 {   
-    Mat src = imread("img/target_area.jpg");
+    Mat src = imread("../data/img/target_area.jpg");
     //사진의 넓이를 구함
     int target_area = src.size().width * src.size().height;
 
@@ -111,8 +111,8 @@ void Board::frgm_board()
     vector<vector<Point>> contours;
     findContours(dilate_edge, contours, RETR_TREE, CHAIN_APPROX_SIMPLE);
 
-    imshow("Contours", dilate_edge);
-    waitKey();
+    // imshow("Contours", dilate_edge);
+    // waitKey();
 
     
     vector<vector<Point>> contours_poly(contours.size());
@@ -155,14 +155,14 @@ void Board::frgm_board()
         my_frgm_obj.crop_Rects.push_back(boundRect[i]);
         imwrite("../data/img/" + to_string(i) +  ".jpg",src(boundRect[i]));
     }
-    imshow("Contours", src);
-    waitKey();
-
+    // imshow("Contours", src);
+    // waitKey();
 }
 
 int Board::get_center_board_x(){
     return my_board_obj.center_board.x;
 }
+
 int Board::get_center_board_y(){
     return my_board_obj.center_board.y;
 }
@@ -172,7 +172,6 @@ int Board::get_crop_Rects_x(int idex){
 }
 int Board::get_crop_Rects_y(int idex){
     return my_frgm_obj.crop_Rects[idex].y;
-
 }
 int Board::get_crop_Rects_w(int idex){
     return my_frgm_obj.crop_Rects[idex].width;
