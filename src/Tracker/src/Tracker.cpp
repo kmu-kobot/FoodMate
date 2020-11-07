@@ -10,12 +10,24 @@ Tracker::Tracker(){}
 //젓가락 좌표 반환하는 함수
 Vec4i Tracker::detect_chopstic(Mat img, int thr, int minLineLength, int maxLineGap)
 {
-	lines.clear();
-	HoughLinesP(img, lines, 1, CV_PI / 180, thr, minLineLength, maxLineGap);
-	if (lines.empty()){
-		return NULL;
-	}
-	return lines[0];
+	Vec4i cur_line;
+		lines.clear();
+		HoughLinesP(img, lines, 1, CV_PI / 180, thr, minLineLength, maxLineGap);
+		if (lines.empty())
+		{
+			return NULL;
+		}
+		for (int i = 0; i < lines.size(); i++)
+		{
+			cur_line += lines[i];
+		}
+		int size = lines.size();
+		cur_line = cur_line / size;
+		cout << (last_line[1] > last_line[3] ? pow(last_line[2] - cur_line[2], 2) + pow(last_line[3] - cur_line[3], 2) : pow(last_line[0] - cur_line[0], 2) + pow(last_line[1] - cur_line[1], 2)) << endl;
+		int error = (last_line[1] > last_line[3] ? pow(last_line[2] - cur_line[2], 2) + pow(last_line[3] - cur_line[3], 2) : pow(last_line[0] - cur_line[0], 2) + pow(last_line[1] - cur_line[1], 2));
+		last_line = cur_line;
+		if (error > 10000) cur_line = last_line;
+		return cur_line;
 }
 
 
@@ -47,8 +59,8 @@ Mat Tracker::make_mask_image(Mat img)
 void Tracker::track_point()
 {	
 
-	setmode(BOARD);
-    setup(BUTTON, IN);
+	//setmode(BOARD);
+    //setup(BUTTON, IN);
 
 	VideoCapture cap(0);
 	cap.set(3, 640);
@@ -86,9 +98,9 @@ void Tracker::track_point()
 		bitwise_and(skin_mask, foreground_mask, foreground_mask);
 
 		// 4.이진화 영상에 Canny 적용
-		Canny(foreground_mask, img_canny, 50, 100);
+		Canny(foreground_mask, img_canny, 50, 150);
 		
-
+		/*
 		// 5.숟가락을 찾으면 바로 반환하고, 숟가락이 없으면 젓가락 좌표 반환
 		//숟가락 포인트
 		Vec3f s = NULL;
@@ -102,10 +114,10 @@ void Tracker::track_point()
 			//waitKey();
 			pt = Point(s[0], s[1]);
 		}
-
+		*/ 
 		//젓가락 포인트
 		Vec4i c = NULL;
-		c = detect_chopstic(img_canny, 70, 15, 100);
+		c = detect_chopstic(img_canny, 60, 50, 100);
 		if (c[0] > 0 && c[1] > 0 && c[2] > 0 && c[3] > 0){
 			line(frame, Point(c[0], c[1]), Point(c[2], c[3]), Scalar(0, 255, 0), 2, 10);
 			circle(frame, Point(c[0], c[1]), 5, Scalar(255, 0, 0), -1);
@@ -119,10 +131,15 @@ void Tracker::track_point()
 
 		}
 
+		imshow("test", frame);
 		//디버깅용
-		imshow("w", frame);
-		if(waitKey(10) > 0 || input(BUTTON) ==  HIGH)
-			break;
+		 if(waitKey(1) == 27) 
+		 {
+			 cap.release();
+			 destroyAllWindows();
+			 break;
+		 }
+
 		//cout << Point(c[1] > c[3] ? c[2] : c[0], c[1] > c[3] ? c[3] : c[1])<<endl;
 		//waitKey();
 	}
