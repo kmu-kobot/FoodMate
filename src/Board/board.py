@@ -13,13 +13,17 @@ class Board(object):
  
         self.board_lib = cdll.LoadLibrary('./libBoard.so')
         self.obj = self.board_lib.Board_new()
+        self.box_x = []
+        self.box_y = []
+        self.count = 0
  
-    def img_preproces(self, src):
-
-        cv2.imshow("test2", self.board_lib.board_img_preproces( self.obj, src ))
+    def img_preproces(self):
+        self.board_lib.board_img_preproces(self.obj)
  
     def get_target_area( self) :
+        print(1)
         self.board_lib.board_get_target_area(self.obj)
+        print(2)
    
     def board_frgm_board(self):
         
@@ -38,27 +42,14 @@ class Board(object):
 
 
     def get_crop_Rects(self):
-        idex = self.board_lib.crop_Rects_size()
-        print(idex)
-        rects = []
-        for i in range(idex):
+        count = self.board_lib.crop_Rects_size()
+        for i in range(count):
             x = self.board_lib.crop_Rects_x(self.obj,i)
             y = self.board_lib.crop_Rects_y(self.obj,i)
             w = self.board_lib.crop_Rects_y(self.obj,i)
             h = self.board_lib.crop_Rects_h(self.obj,i)
-            rect = [x, y, w, h]
-            rects.append(rect)
+            self.box_x.append([x, x + w]) 
+            self.box_y.append([y, h + y])
 
-        return rects
- 
-class PT_data(Structure) : 
-    _fields_ = [("x", c_int), ("y", c_int), ("w", c_int), ("h", c_int)] 
 
-if __name__ == '__main__':
- 
-    b = Board()
-    b.get_target_area()
-    b.board_frgm_board()
-    rects = b.get_crop_Rects()
-    print(rects)
-    
+
