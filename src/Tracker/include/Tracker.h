@@ -1,13 +1,13 @@
 #pragma once
 #include <opencv2/opencv.hpp>
-#include <JetsonGPIO.h>
+//#include <JetsonGPIO.h>
 #include <vector>
 
 using namespace cv;
 using namespace std;
-using namespace GPIO;
+//using namespace GPIO;
 
-#define BUTTON 33
+//#define BUTTON 33
 
 class Tracker {
 private:
@@ -16,6 +16,7 @@ private:
 	Ptr<BackgroundSubtractor> bg_model = createBackgroundSubtractorMOG2(-1, 400, false);
 	vector<Vec4i> lines;
 	vector<Vec3f> circles;
+	Vec4i last_line;
 	Mat img_YCrCb;
 	Mat mask;
 
