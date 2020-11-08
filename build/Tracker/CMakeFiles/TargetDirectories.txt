@@ -1,0 +1,3 @@
+/home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/rebuild_cache.dir
+/home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/Tracker.dir
+/home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/edit_cache.dir

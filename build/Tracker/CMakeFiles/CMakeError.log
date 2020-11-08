@@ -1,0 +1,224 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/kobot/Desktop/Food_Mate/build/Tracker/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_712e3/fast"
+/usr/bin/make -f CMakeFiles/cmTC_712e3.dir/build.make CMakeFiles/cmTC_712e3.dir/build
+make[1]: Entering directory '/home/kobot/Desktop/Food_Mate/build/Tracker/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_712e3.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -fPIC    -o CMakeFiles/cmTC_712e3.dir/CheckSymbolExists.c.o   -c /home/kobot/Desktop/Food_Mate/build/Tracker/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_712e3
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_712e3.dir/link.txt --verbose=1
+/usr/bin/cc -fPIC     -rdynamic CMakeFiles/cmTC_712e3.dir/CheckSymbolExists.c.o  -o cmTC_712e3 
+CMakeFiles/cmTC_712e3.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x14): undefined reference to `pthread_create'
+CheckSymbolExists.c:(.text+0x18): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_712e3.dir/build.make:97: recipe for target 'cmTC_712e3' failed
+make[1]: *** [cmTC_712e3] Error 1
+make[1]: Leaving directory '/home/kobot/Desktop/Food_Mate/build/Tracker/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_712e3/fast' failed
+make: *** [cmTC_712e3/fast] Error 2
+
+File /home/kobot/Desktop/Food_Mate/build/Tracker/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/kobot/Desktop/Food_Mate/build/Tracker/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_60c9d/fast"
+/usr/bin/make -f CMakeFiles/cmTC_60c9d.dir/build.make CMakeFiles/cmTC_60c9d.dir/build
+make[1]: Entering directory '/home/kobot/Desktop/Food_Mate/build/Tracker/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_60c9d.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_60c9d.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.10/Modules/CheckFunctionExists.c
+Linking C executable cmTC_60c9d
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_60c9d.dir/link.txt --verbose=1
+/usr/bin/cc -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create    -rdynamic CMakeFiles/cmTC_60c9d.dir/CheckFunctionExists.c.o  -o cmTC_60c9d -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_60c9d.dir/build.make:97: recipe for target 'cmTC_60c9d' failed
+make[1]: *** [cmTC_60c9d] Error 1
+make[1]: Leaving directory '/home/kobot/Desktop/Food_Mate/build/Tracker/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_60c9d/fast' failed
+make: *** [cmTC_60c9d/fast] Error 2
+
+
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_65c18/fast"
+/usr/bin/make -f CMakeFiles/cmTC_65c18.dir/build.make CMakeFiles/cmTC_65c18.dir/build
+make[1]: Entering directory '/home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_65c18.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -fPIC    -o CMakeFiles/cmTC_65c18.dir/CheckSymbolExists.c.o   -c /home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_65c18
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_65c18.dir/link.txt --verbose=1
+/usr/bin/cc -fPIC     -rdynamic CMakeFiles/cmTC_65c18.dir/CheckSymbolExists.c.o  -o cmTC_65c18 
+CMakeFiles/cmTC_65c18.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x14): undefined reference to `pthread_create'
+CheckSymbolExists.c:(.text+0x18): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_65c18.dir/build.make:97: recipe for target 'cmTC_65c18' failed
+make[1]: *** [cmTC_65c18] Error 1
+make[1]: Leaving directory '/home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_65c18/fast' failed
+make: *** [cmTC_65c18/fast] Error 2
+
+File /home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_cddd7/fast"
+/usr/bin/make -f CMakeFiles/cmTC_cddd7.dir/build.make CMakeFiles/cmTC_cddd7.dir/build
+make[1]: Entering directory '/home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_cddd7.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_cddd7.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.10/Modules/CheckFunctionExists.c
+Linking C executable cmTC_cddd7
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_cddd7.dir/link.txt --verbose=1
+/usr/bin/cc -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create    -rdynamic CMakeFiles/cmTC_cddd7.dir/CheckFunctionExists.c.o  -o cmTC_cddd7 -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_cddd7.dir/build.make:97: recipe for target 'cmTC_cddd7' failed
+make[1]: *** [cmTC_cddd7] Error 1
+make[1]: Leaving directory '/home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_cddd7/fast' failed
+make: *** [cmTC_cddd7/fast] Error 2
+
+
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_c5ab4/fast"
+/usr/bin/make -f CMakeFiles/cmTC_c5ab4.dir/build.make CMakeFiles/cmTC_c5ab4.dir/build
+make[1]: Entering directory '/home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_c5ab4.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -fPIC    -o CMakeFiles/cmTC_c5ab4.dir/CheckSymbolExists.c.o   -c /home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_c5ab4
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c5ab4.dir/link.txt --verbose=1
+/usr/bin/cc -fPIC     -rdynamic CMakeFiles/cmTC_c5ab4.dir/CheckSymbolExists.c.o  -o cmTC_c5ab4 
+CMakeFiles/cmTC_c5ab4.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x14): undefined reference to `pthread_create'
+CheckSymbolExists.c:(.text+0x18): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_c5ab4.dir/build.make:97: recipe for target 'cmTC_c5ab4' failed
+make[1]: *** [cmTC_c5ab4] Error 1
+make[1]: Leaving directory '/home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_c5ab4/fast' failed
+make: *** [cmTC_c5ab4/fast] Error 2
+
+File /home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_19a1d/fast"
+/usr/bin/make -f CMakeFiles/cmTC_19a1d.dir/build.make CMakeFiles/cmTC_19a1d.dir/build
+make[1]: Entering directory '/home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_19a1d.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_19a1d.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.10/Modules/CheckFunctionExists.c
+Linking C executable cmTC_19a1d
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_19a1d.dir/link.txt --verbose=1
+/usr/bin/cc -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create    -rdynamic CMakeFiles/cmTC_19a1d.dir/CheckFunctionExists.c.o  -o cmTC_19a1d -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_19a1d.dir/build.make:97: recipe for target 'cmTC_19a1d' failed
+make[1]: *** [cmTC_19a1d] Error 1
+make[1]: Leaving directory '/home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_19a1d/fast' failed
+make: *** [cmTC_19a1d/fast] Error 2
+
+
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_21bda/fast"
+/usr/bin/make -f CMakeFiles/cmTC_21bda.dir/build.make CMakeFiles/cmTC_21bda.dir/build
+make[1]: Entering directory '/home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_21bda.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -fPIC    -o CMakeFiles/cmTC_21bda.dir/CheckSymbolExists.c.o   -c /home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_21bda
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_21bda.dir/link.txt --verbose=1
+/usr/bin/cc -fPIC     -rdynamic CMakeFiles/cmTC_21bda.dir/CheckSymbolExists.c.o  -o cmTC_21bda 
+CMakeFiles/cmTC_21bda.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x14): undefined reference to `pthread_create'
+CheckSymbolExists.c:(.text+0x18): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_21bda.dir/build.make:97: recipe for target 'cmTC_21bda' failed
+make[1]: *** [cmTC_21bda] Error 1
+make[1]: Leaving directory '/home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_21bda/fast' failed
+make: *** [cmTC_21bda/fast] Error 2
+
+File /home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_0a07b/fast"
+/usr/bin/make -f CMakeFiles/cmTC_0a07b.dir/build.make CMakeFiles/cmTC_0a07b.dir/build
+make[1]: Entering directory '/home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_0a07b.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_0a07b.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.10/Modules/CheckFunctionExists.c
+Linking C executable cmTC_0a07b
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0a07b.dir/link.txt --verbose=1
+/usr/bin/cc -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create    -rdynamic CMakeFiles/cmTC_0a07b.dir/CheckFunctionExists.c.o  -o cmTC_0a07b -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_0a07b.dir/build.make:97: recipe for target 'cmTC_0a07b' failed
+make[1]: *** [cmTC_0a07b] Error 1
+make[1]: Leaving directory '/home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_0a07b/fast' failed
+make: *** [cmTC_0a07b/fast] Error 2
+
+
