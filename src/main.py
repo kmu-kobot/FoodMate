@@ -27,7 +27,7 @@ import os
 import numpy as np
 import time
 from board import Board
-# from guess import Guess
+from guess import Guess
 from playsound import playsound
 from sound import Sound
 from tracker import Tracker
@@ -63,7 +63,7 @@ class MainDish:
         self.Cx, self.Cy = 0, 0
 
         # keras 미리 로딩
-        # self.guess = Guess()
+        self.guess = Guess()
 
         # 모든 클래스의 객체생성
         # 1. 급식판 좌표
@@ -77,8 +77,8 @@ class MainDish:
         #self.hsv, self.lower_blue1, self.upper_blue1, self.lower_blue2, self.upper_blue2,\
         #                    self.lower_blue3, self.upper_blue3 = trackBlue.find_target()
         # 3. keras로 음식 맞추기 
-        # self.guess.realGuess()  # 일단 급식판에 무슨 음식이 있는지 학습
-        # self.answer = self.guess.matchFood(self.Cx, self.Cy, self.board.box_x, self.board.box_y)
+        self.guess.realGuess()  # 일단 급식판에 무슨 음식이 있는지 학습
+        self.answer = self.guess.matchFood(self.Cx, self.Cy, self.board.box_x, self.board.box_y)
 
 
     def goingOn(self):  # 여기 callback으로 matchfood 넣을지 고민
@@ -91,7 +91,7 @@ class MainDish:
                 self.Cx , self.Cy = t.get_track_point()
                 # 젓가락의 위치랑 이미지의 픽셀값안에 있나 확인해서 음식명 출력
                 print(self.Cx , self.Cy)
-                # self.answer = self.guess.matchFood(self.Cx, self.Cy, self.board.box_x, self.board.box_y)
+                self.answer = self.guess.matchFood(self.Cx, self.Cy, self.board.box_x, self.board.box_y)
                 print(self.answer)
                 sound = Sound(self.answer)
 
