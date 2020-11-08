@@ -54,10 +54,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/kobot/Desktop/Food_Mate2/build/Tracker
+CMAKE_SOURCE_DIR = /home/kobot/Desktop/FoodMate/build/Tracker
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/kobot/Desktop/Food_Mate2/build/Tracker
+CMAKE_BINARY_DIR = /home/kobot/Desktop/FoodMate/build/Tracker
 
 #=============================================================================
 # Target rules for target CMakeFiles/Tracker.dir
@@ -66,7 +66,7 @@ CMAKE_BINARY_DIR = /home/kobot/Desktop/Food_Mate2/build/Tracker
 CMakeFiles/Tracker.dir/all:
 	$(MAKE) -f CMakeFiles/Tracker.dir/build.make CMakeFiles/Tracker.dir/depend
 	$(MAKE) -f CMakeFiles/Tracker.dir/build.make CMakeFiles/Tracker.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles --progress-num=1,2 "Built target Tracker"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/kobot/Desktop/FoodMate/build/Tracker/CMakeFiles --progress-num=1,2 "Built target Tracker"
 .PHONY : CMakeFiles/Tracker.dir/all
 
 # Include target in all.
@@ -76,9 +76,9 @@ all: CMakeFiles/Tracker.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/Tracker.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kobot/Desktop/FoodMate/build/Tracker/CMakeFiles 2
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/Tracker.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kobot/Desktop/FoodMate/build/Tracker/CMakeFiles 0
 .PHONY : CMakeFiles/Tracker.dir/rule
 
 # Convenience name for target.

@@ -1,3 +1,28 @@
+///////////////////////////////////////////////////////////////////////////////////
+//
+// Copyright (c) 2020 KOBOT kobot9@naver.com.
+// All rights reserved.
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE
+//
+//////////////////////////////////////////////////////////////////////////////////
+
 #include "Tracker.h"
 
 
@@ -117,14 +142,15 @@ void Tracker::track_point()
 		c = detect_chopstic(img_canny, 60, 50, 100);
 		if (c[0] > 0 && c[1] > 0 && c[2] > 0 && c[3] > 0){
 			line(frame, Point(c[0], c[1]), Point(c[2], c[3]), Scalar(0, 255, 0), 2, 10);
-			circle(frame, Point(c[0], c[1]), 5, Scalar(255, 0, 0), -1);
+			circle(frame,Point(c[3] > c[1] ? c[2] : c[0], c[3] > c[1] ? c[3] : c[1]), 5, Scalar(255, 0, 0), -1);
+			// circle(frame,Point(c[0], c[1]), 5, Scalar(0, 0, 255), -1);
 			//디버깅용
 			//imshow("canny_img", frame);
 			//cout << Point(c[1] > c[3] ? c[2] : c[0], c[1] > c[3] ? c[3] : c[1])<<endl;
 			//waitKey();
 
 			//영상에서 더 위에있는 포인트 반환
-			pt = Point(c[1] > c[3] ? c[2] : c[0], c[1] > c[3] ? c[3] : c[1]);
+			pt = Point(c[3] > c[1] ? c[2] : c[0], c[3] > c[1] ? c[3] : c[1]);
 
 		}
 

@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/kobot/Desktop/Food_Mate2/build/Tracker/src/Tracker.cpp" "/home/kobot/Desktop/Food_Mate2/build/Tracker/CMakeFiles/Tracker.dir/src/Tracker.cpp.o"
+  "/home/kobot/Desktop/FoodMate/build/Tracker/src/Tracker.cpp" "/home/kobot/Desktop/FoodMate/build/Tracker/CMakeFiles/Tracker.dir/src/Tracker.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

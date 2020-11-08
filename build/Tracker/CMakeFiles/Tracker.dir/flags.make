@@ -6,5 +6,5 @@ CXX_FLAGS = -O3 -DNDEBUG -fPIC   -std=gnu++14
 
 CXX_DEFINES = -DTracker_EXPORTS
 
-CXX_INCLUDES = -I/home/kobot/Desktop/Food_Mate2/build/Tracker/include -isystem /usr/local/include/opencv4 
+CXX_INCLUDES = -I/home/kobot/Desktop/FoodMate/build/Tracker/include -isystem /usr/local/include/opencv4 
 

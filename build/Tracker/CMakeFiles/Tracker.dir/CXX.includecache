@@ -6,9 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/home/kobot/Desktop/Food_Mate2/build/Tracker/src/Tracker.cpp
+/home/kobot/Desktop/FoodMate/build/Tracker/src/Tracker.cpp
 Tracker.h
-/home/kobot/Desktop/Food_Mate2/build/Tracker/src/Tracker.h
+/home/kobot/Desktop/FoodMate/build/Tracker/src/Tracker.h
 
 /usr/local/include/opencv4/opencv2/calib3d.hpp
 opencv2/core.hpp
