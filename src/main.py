@@ -74,10 +74,6 @@ class MainDish:
         self.board.get_target_area()
         self.board.board_frgm_board()
 
-        # 2. 추적할 파란색 범위
-        #trackBlue = Track_blue(self.img)
-        #self.hsv, self.lower_blue1, self.upper_blue1, self.lower_blue2, self.upper_blue2,\
-        #                    self.lower_blue3, self.upper_blue3 = trackBlue.find_target()
         # 3. keras로 음식 맞추기 
         self.guess.realGuess()  # 일단 급식판에 무슨 음식이 있는지 학습
         self.answer = self.guess.matchFood(self.Cx, self.Cy, self.board.box_x, self.board.box_y)
