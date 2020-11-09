@@ -69,7 +69,7 @@ Mat Board::img_preproces(Mat src)
 void Board::get_target_area()
 {
 
-    Mat src = imread("../data/img/Scanned_image.jpg");
+    Mat src = imread("../data/board_img/Scanned_image.jpg");
     // imshow("Contours", src);
     // waitKey();
 
@@ -117,12 +117,13 @@ void Board::get_target_area()
     my_board_obj.crop_imgs = src(boundRect);
     // imshow("Contours", my_board_obj.crop_imgs);
     // waitKey();
-    imwrite("../data/img/target_area.jpg", my_board_obj.crop_imgs);
+    imwrite("../data/board_img/target_area.jpg", my_board_obj.crop_imgs);
 }
 
 void Board::frgm_board()
 {   
-    Mat src = imread("../data/img/target_area.jpg");
+    Mat src = imread("../data/board_img/Scanned_image.jpg");
+    Mat src_clone = src.clone();
     //사진의 넓이를 구함
     int target_area = src.size().width * src.size().height;
 
@@ -179,10 +180,9 @@ void Board::frgm_board()
         cout << boundRect[i].x << " " << boundRect[i].y << " " << boundRect[i].width << " " << boundRect[i].height << endl;
         my_frgm_obj.crop_imgs.push_back(src(boundRect[i]));
         my_frgm_obj.crop_Rects.push_back(boundRect[i]);
-        imwrite("../data/img/" + to_string(i) +  ".jpg",src(boundRect[i]));
+        imwrite("../data/img/" + to_string(i) +  ".jpg",src_clone(boundRect[i]));
     }
-    // imshow("Contours", src);
-    // waitKey();
+
 }
 
 int Board::get_center_board_x(){

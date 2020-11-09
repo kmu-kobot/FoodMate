@@ -40,7 +40,6 @@ import Jetson.GPIO as GPIO
 class MainDish:
 
     def __init__(self):
-
         self.button_pin = 33
 
         GPIO.setmode(GPIO.BOARD)
@@ -50,13 +49,16 @@ class MainDish:
         # img 폴더 안에 있던 이미지 모두 삭제
         for file in os.scandir('../data/img'):
             os.remove(file.path)
+        for file in os.scandir('../data/board_img'):
+            os.remove(file.path)
 
         # 웹캠 사용해서 식판 스캔
         self.cap = cv2.VideoCapture(-1) 
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
         ret, self.img = self.cap.read()
-        cv2.imwrite('../data/img/Scanned_image.jpg',self.img, params=[cv2.IMWRITE_JPEG_QUALITY,70])
+
+        cv2.imwrite('../data/board_img/Scanned_image.jpg',self.img, params=[cv2.IMWRITE_JPEG_QUALITY,70])
         self.cap.release()
 
         # 젓가락의 위치

@@ -139,10 +139,10 @@ void Tracker::track_point()
 		*/ 
 		//젓가락 포인트
 		Vec4i c = NULL;
-		c = detect_chopstic(img_canny, 60, 50, 100);
+		c = detect_chopstic(img_canny, 50, 50, 100);
 		if (c[0] > 0 && c[1] > 0 && c[2] > 0 && c[3] > 0){
 			line(frame, Point(c[0], c[1]), Point(c[2], c[3]), Scalar(0, 255, 0), 2, 10);
-			circle(frame,Point(c[3] > c[1] ? c[2] : c[0], c[3] > c[1] ? c[3] : c[1]), 5, Scalar(255, 0, 0), -1);
+			
 			// circle(frame,Point(c[0], c[1]), 5, Scalar(0, 0, 255), -1);
 			//디버깅용
 			//imshow("canny_img", frame);
@@ -151,7 +151,8 @@ void Tracker::track_point()
 
 			//영상에서 더 위에있는 포인트 반환
 			pt = Point(c[3] > c[1] ? c[2] : c[0], c[3] > c[1] ? c[3] : c[1]);
-
+			// circle(frame,Point(c[3] > c[1] ? c[2] : c[0], c[3] > c[1] ? c[3] : c[1]), 5, Scalar(255, 0, 0), -1);
+			circle(frame,Point(pt.x,pt.y), 5, Scalar(255, 0, 0), -1);	
 		}
 
 		imshow("test", frame);

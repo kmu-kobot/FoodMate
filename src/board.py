@@ -41,13 +41,13 @@ class Board(object):
         self.board_lib.board_img_preproces(self.obj)
  
     def get_target_area( self) :
-        print(1)
         self.board_lib.board_get_target_area(self.obj)
-        print(2)
+     
    
     def board_frgm_board(self):
         
         self.board_lib.board_frgm_board(self.obj)
+        self.get_crop_Rects()
     
     def board_rectArea(self, rect):
 
@@ -66,9 +66,9 @@ class Board(object):
         for i in range(count):
             x = self.board_lib.crop_Rects_x(self.obj,i)
             y = self.board_lib.crop_Rects_y(self.obj,i)
-            w = self.board_lib.crop_Rects_y(self.obj,i)
+            w = self.board_lib.crop_Rects_w(self.obj,i)
             h = self.board_lib.crop_Rects_h(self.obj,i)
-            self.box_x.append([x, x + w]) 
+            self.box_x.append([640-x-w, 640-x]) 
             self.box_y.append([y, h + y])
 
 

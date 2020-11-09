@@ -37,14 +37,17 @@ class Sound:
 
     def play_sound(self, dish_name):
         if dish_name == "none": # 아무 것도 들어오지 않은 경우
-            os.system("canberra-gtk-play -f ../data/sound/더_이동해주세요.wav")
+            os.system("canberra-gtk-play -f ../data/sound/더이동해주세요.wav")
             return
         elif dish_name == "scan_start": # 스캔 시작 알림
-            os.system("canberra-gtk-play -f ~../data/sound/스캔중.wav")
+            os.system("canberra-gtk-play -f ../data/sound/스캔중.wav")
             return
 
         elif dish_name =="scan_end": # 스캔 완료 알림
             os.system("canberra-gtk-play -f ../data/sound/스캔완료.wav")
+            return
+        elif dish_name == "scan_find": # 스캔 시작 알림
+            os.system("canberra-gtk-play -f ../data/sound/음식이보입니다.wav")
             return
         else: # 반찬 이름이 들어울 경우
             os.system("canberra-gtk-play -f ../data/sound/" + str(dish_name) + ".wav")

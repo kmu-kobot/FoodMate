@@ -21,7 +21,7 @@ typedef struct{
 
 class Board{
     private:
-        int thresh = 25;
+        int thresh = 15;
 
     public:
 

@@ -6,21 +6,21 @@
 
 #IncludeRegexTransform: 
 
-/home/kobot/Desktop/Food_Mate2/build/Board/src/Board.cpp
+/home/kobot/Desktop/FoodMate/build/Board/src/Board.cpp
 opencv2/imgcodecs.hpp
-/home/kobot/Desktop/Food_Mate2/build/Board/src/opencv2/imgcodecs.hpp
+/home/kobot/Desktop/FoodMate/build/Board/src/opencv2/imgcodecs.hpp
 opencv2/highgui.hpp
-/home/kobot/Desktop/Food_Mate2/build/Board/src/opencv2/highgui.hpp
+/home/kobot/Desktop/FoodMate/build/Board/src/opencv2/highgui.hpp
 opencv2/imgproc.hpp
-/home/kobot/Desktop/Food_Mate2/build/Board/src/opencv2/imgproc.hpp
+/home/kobot/Desktop/FoodMate/build/Board/src/opencv2/imgproc.hpp
 iostream
 -
 string
 -
 Board.h
-/home/kobot/Desktop/Food_Mate2/build/Board/src/Board.h
+/home/kobot/Desktop/FoodMate/build/Board/src/Board.h
 string
-/home/kobot/Desktop/Food_Mate2/build/Board/src/string
+/home/kobot/Desktop/FoodMate/build/Board/src/string
 
 /usr/local/include/opencv4/opencv2/core.hpp
 opencv2/core/cvdef.h

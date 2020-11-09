@@ -6,5 +6,5 @@ CXX_FLAGS = -fPIC   -std=gnu++11
 
 CXX_DEFINES = -DBoard_EXPORTS
 
-CXX_INCLUDES = -I/home/kobot/Desktop/Food_Mate2/build/Board/include -isystem /usr/local/include/opencv4 
+CXX_INCLUDES = -I/home/kobot/Desktop/FoodMate/build/Board/include -isystem /usr/local/include/opencv4 
 

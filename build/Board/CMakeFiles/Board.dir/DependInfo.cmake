@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/kobot/Desktop/Food_Mate2/build/Board/src/Board.cpp" "/home/kobot/Desktop/Food_Mate2/build/Board/CMakeFiles/Board.dir/src/Board.cpp.o"
+  "/home/kobot/Desktop/FoodMate/build/Board/src/Board.cpp" "/home/kobot/Desktop/FoodMate/build/Board/CMakeFiles/Board.dir/src/Board.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

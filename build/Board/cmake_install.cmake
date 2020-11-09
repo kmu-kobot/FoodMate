@@ -1,4 +1,4 @@
-# Install script for directory: /home/kobot/Desktop/Food_Mate2/build/Board
+# Install script for directory: /home/kobot/Desktop/FoodMate/build/Board
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/kobot/Desktop/Food_Mate2/build/Board/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/kobot/Desktop/FoodMate/build/Board/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

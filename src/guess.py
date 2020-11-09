@@ -28,11 +28,7 @@ import tensorflow.keras
 from PIL import Image, ImageOps
 import numpy as np
 import os
-from sound import Sound
 from natsort import natsorted, ns
-import sound
-import getch
-
 
 class Guess:
     def __init__(self):
@@ -95,7 +91,6 @@ class Guess:
                 answer = (self.result[i])  # 이부분이 케라스의 result와 연동되어야할 부분
                 break
             else:  # 파란 포인터는 있는데 반찬있는 곳에 있지 않을경우
-                answer = '더 이동해주세요'
-            # 파란색 포인터의 좌표와 정답출력
-            sound = Sound(answer)
+                answer = 'none'
+            
         return answer
