@@ -84,21 +84,3 @@ class Board:
                 self.box_x.append([x, x + w])  # 조각의 위치를 기록
                 self.box_y.append([y, h + y])
 
-            cv2.imshow('all_menu', all_menu)
-            
-            # 스캔 시작과 끝에 음성 출력
-            if count == 0 or count == len(contours)-1:
-                playsound('../data/sound/스캔중.mp3')
-            count += 1
-
-        cv2.destroyAllWindows()
-
-
-
-if __name__ == '__main__':
-    make = Board()
-    x, y, z, w = make.edgeOfBoard()
-    print(x, y, z, w)
-    count = make.frgm_board(make.edgeOfBoard)
-    print(make.count)
-    print(make.box_x)
