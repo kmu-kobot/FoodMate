@@ -35,7 +35,7 @@ using namespace std;
 
 class Tracker {
 private:
-	Mat blur, skin_mask, foreground_mask, img_canny;
+Mat blur, skin_mask, foreground_mask, img_canny;
 	//차영상 background 설정(history = -1, threshold = 400, shadow = false) 
 	Ptr<BackgroundSubtractor> bg_model = createBackgroundSubtractorMOG2(-1, 400, false);
 	vector<Vec4i> lines;
@@ -57,5 +57,5 @@ public:
 	void track_point();
 
 	int get_track_point_x();
-   	int get_track_point_y();
+	int get_track_point_y();
 };

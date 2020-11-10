@@ -26,21 +26,21 @@
 from ctypes import *
 import numpy as np
 import cv2
- 
+
 class Tracker(object):
- 
-    def __init__(self):
-        self.track_lib = cdll.LoadLibrary('../lib/libTracker.so')
-        self.obj = self.track_lib.Tracker_new()
 
-    def track_point(self):
-        self.track_lib.track_point(self.obj)
+	def __init__(self):
+		self.track_lib = cdll.LoadLibrary('../lib/libTracker.so')
+		self.obj = self.track_lib.Tracker_new()
 
-    def get_track_point(self):
-        track_point_x = self.track_lib.track_point_x(self.obj)
-        track_point_y = self.track_lib.track_point_y(self.obj)
+	def track_point(self):
+		self.track_lib.track_point(self.obj)
 
-        point = [track_point_x, track_point_y]
-        return track_point_x , track_point_y
+	def get_track_point(self):
+		track_point_x = self.track_lib.track_point_x(self.obj)
+		track_point_y = self.track_lib.track_point_y(self.obj)
+
+		point = [track_point_x, track_point_y]
+		return track_point_x , track_point_y
 
     

@@ -178,10 +178,10 @@ int Tracker::get_track_point_y(){
 
 extern "C" {
 
-    Tracker* Tracker_new()
-    {
-        return new Tracker();
-    }
+	Tracker* Tracker_new()
+	{
+		return new Tracker();
+	}
 	//젓가락 좌표 반환하는 함수
 	Vec4i detect_chopstic(Tracker * t, Mat img, int thr, int minLineLength, int maxLineGap){return t->detect_chopstic(img, thr, minLineLength, maxLineGap);}
 	//숟가락 좌표 반환하는 함수
@@ -190,7 +190,7 @@ extern "C" {
 	Mat make_mask_image(Tracker * t, Mat img){return t-> make_mask_image(img);}
 	//tracking point 젓가락의 좌표 반환 _______ 이것만 사용!!
 	void track_point(Tracker * t){t->track_point();}
-	
+
 	int track_point_x(Tracker * t){return t->get_track_point_x();}
-    int track_point_y(Tracker * t){return t->get_track_point_y();}
+	int track_point_y(Tracker * t){return t->get_track_point_y();}
 }
